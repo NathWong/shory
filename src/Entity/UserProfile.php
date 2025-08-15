@@ -26,7 +26,7 @@ class UserProfile
     private ?string $avatar = null;
 
     #[ORM\Column]
-    private ?int $rank = null;
+    private int $rank = 1;
 
     #[ORM\OneToOne(inversedBy: 'userProfile', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]

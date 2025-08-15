@@ -17,7 +17,7 @@
            <header>
                 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
                     <div class="container-fluid">
-                        <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home_index') }}">
+                        <a class="navbar-brand d-flex align-items-center" href="{{ path(app.user ? 'app_profile_user' : 'app_login', app.user ? {'user_id' : app.user.id} : {}) }}">
                             <img src="{{ asset('images/logo.png') }}" alt="Logo de Mon App" height="30" class="d-inline-block align-text-top me-2">
                             Shory
                         </a>
