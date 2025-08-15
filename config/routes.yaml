@@ -3,3 +3,10 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+app_redirect_root:
+    path: /
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        route: 'app_home_index' # Le nom de la route vers laquelle vous redirigez
+        permanent: true   # Indique une redirection permanente (HTTP 301)

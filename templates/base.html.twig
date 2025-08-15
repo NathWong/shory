@@ -15,9 +15,30 @@
         {% block body %}
         {# ----- Up toolbar ----- #}
            <header>
-                <nav class="navbar bg-light">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
                     <div class="container-fluid">
-                        <a class="navbar-brand" href="#">Shory</a>
+                        <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home_index') }}">
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo de Mon App" height="30" class="d-inline-block align-text-top me-2">
+                            Shory
+                        </a>
+
+                        {# Bouton "hamburger" pour les écrans mobiles #}
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        {# Contenu de la navbar qui sera masqué sur mobile #}
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            {# Laisser cette liste vide pour le moment #}
+                            <ul class="navbar-nav">
+                                {#
+                                Exemple de lien que vous pourriez ajouter plus tard :
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Lien 1</a>
+                                </li>
+                                #}
+                            </ul>
+                        </div>
                     </div>
                 </nav>
             </header>
@@ -25,22 +46,22 @@
             <div class="d-flex flex-grow-1 overflow-hidden">
                 {# ----- Left toolbar ----- #}
                 <aside class="p-3 bg-light" style="width: 200px;">
-                    <turbo-frame id="target-left">
-                        {% block target-left %}{% endblock %}
+                    <turbo-frame id="target-left">toto
+                        {% block target_left %}{% endblock %}
                     </turbo-frame>
                 </aside>
 
                 {# Main content #}
                 <main class="flex-grow-1 p-4 overflow-auto">
                     <turbo-frame id="target-center">
-                        {% block target-center %}{% endblock %}
+                        {% block target_center %}{% endblock %}
                     </turbo-frame>
                 </main>
 
                 {# ----- Right toolbar ----- #}
                 <aside class="p-3 bg-white border-start" style="width: 250px;">
                     <turbo-frame id="target-right">
-                        {% block target-right %}{% endblock %}
+                        {% block target_right %}{% endblock %}
                     </turbo-frame>
                 </aside>
             </div>
