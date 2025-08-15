@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Contract\ProfiledUserInterface;
 use App\Entity\UserProfile;
 use App\Form\UserProfileType;
 use App\Repository\UserProfileRepository;
@@ -12,16 +12,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use function PHPUnit\Framework\throwException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/profile')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 final class ProfileController extends AbstractController
 {
-    #[Route('/user/{user_id}', name: 'app_profile_user', methods: ['GET'])]
-    public function profile(User $user, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/user', name: 'app_profile_user', methods: ['GET'])]
+    public function profile(): Response
     {
-        if ($user->getUserProfile()) {
-            return $this->redirectToRoute('app_profile_show', ['id' => $user->getUserProfile()->getId()]);
+        if ($this->getUserProfile()) {
+            return $this->redirectToRoute('app_profile_show');
         }
 
         return $this->redirectToRoute('app_profile_new');
@@ -38,12 +39,7 @@ final class ProfileController extends AbstractController
     #[Route('/new', name: 'app_profile_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
-        if (!($user instanceof User)) {
-            throwException(new UnsupportedUserException('User should be of class '.User::class.' .Instead of '.$user::class));
-        }
-
-        $userProfile = $user->getUserProfile() ?: new UserProfile();
+        $userProfile = $this->getUserProfile() ?: new UserProfile();
         $userProfile->setAccount($user);
         $form = $this->createForm(UserProfileType::class, $userProfile);
         $form->handleRequest($request);
@@ -52,7 +48,7 @@ final class ProfileController extends AbstractController
             $entityManager->persist($userProfile);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_profile_show', ['id' => $userProfile->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_profile_show');
         }
 
         return $this->render('profile/new.html.twig', [
@@ -61,9 +57,11 @@ final class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/show', name: 'app_profile_show', methods: ['GET'])]
-    public function show(UserProfile $userProfile): Response
+    #[Route('/show', name: 'app_profile_show', methods: ['GET'])]
+    public function show(): Response
     {
+        $userProfile = $this->getUserProfile();
+
         return $this->render('profile/show.html.twig', [
             'user_profile' => $userProfile,
         ]);
@@ -96,5 +94,21 @@ final class ProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('app_profile_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function getProfiledUser(): ProfiledUserInterface
+    {
+        $user = $this->getUser();
+
+        if (!($user instanceof ProfiledUserInterface)) {
+            throw new UnsupportedUserException('User should implement '.ProfiledUserInterface::class);
+        }
+
+        return $user;
+    }
+
+    private function getUserProfile(): ?UserProfile
+    {
+        return $this->getProfiledUser()->getUserProfile();
     }
 }
