@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2"
+  }
+}

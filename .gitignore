@@ -25,3 +25,6 @@
 
 test.php
 Makefile.local
+
+assets/controllers/*.js
+assets/controllers/*.js.map

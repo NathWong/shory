@@ -21,7 +21,8 @@ help:
 	@echo "  stop           - Arrête le serveur Symfony et/ou les services Docker."
 	@echo "  status         - Affiche le statut des services (Symfony, Docker)."
 	@echo "  build          - Construit les assets frontend (Webpack Encore)."
-	@echo "  cache          - Vide le cache Symfony."
+	@echo "  cc         	- Vide le cache Symfony."
+	@echo "  cc-hard        - Vide le cache Symfony et redémarre le serveur."
 	@echo "  git            - Affiche le statut Git et pousse les changements."
 	@echo ""
 	@echo "  db-create      - Crée la base de données (si elle n'existe pas)."
@@ -38,6 +39,7 @@ help:
 	@echo "  up             - Alias pour 'start'."
 	@echo "  down           - Alias pour 'stop'."
 	@echo "  ps             - Alias pour 'status'."
+	@echo " ts-watch		- Lance le compilateur ts en mode watch"
 
 
 # -----------------------------------------------------------------------------
@@ -71,7 +73,11 @@ build:
 	@echo "--> Construction des assets frontend..."
 	npm run build
 
-cache:
+cc:
+	@echo "--> Vidage du cache Symfony..."
+	$(SYMFONY_CONSOLE) cache:clear
+
+cc-hard:
 	@echo "--> Vidage du cache Symfony..."
 	$(SYMFONY_CONSOLE) cache:clear
 
@@ -140,3 +146,15 @@ cs-fix:
 up: start
 down: stop
 ps: status
+
+# -----------------------------------------------------------------------------
+# Commandes typescript
+# -----------------------------------------------------------------------------
+
+ts-one:
+	@echo "Lancement du compilateur ts"
+	npx tsc
+
+ts-watch:
+	@echo "Lancement du compilateur ts en mode watch"
+	npx tsc --watch

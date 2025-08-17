@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ESNext",
+        "strict": true,
+        "sourceMap": true, // Important: génère des fichiers .js.map pour faciliter le débogage
+        "moduleResolution": "node",
+        // On ne spécifie pas de "outDir" (dossier de sortie).
+        // Ainsi, les fichiers .js seront générés juste à côté des fichiers .ts correspondants.
+    },
+    "include": [
+        "./assets/**/*.ts"
+    ]
+}

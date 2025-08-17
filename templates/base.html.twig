@@ -14,31 +14,49 @@
     <body class="d-flex flex-column vh-100">
         {% block body %}
         {# ----- Up toolbar ----- #}
-           <header>
+            <header>
                 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
                     <div class="container-fluid">
-                        <a class="navbar-brand d-flex align-items-center" href="{{ path(app.user ? 'app_profile_user' : 'app_login', app.user ? {'user_id' : app.user.id} : {}) }}" data-turbo-frame="target-center">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo de Mon App" height="30" class="d-inline-block align-text-top me-2">
-                            Shory
+
+                        {# 1. logo - link to home #}
+                        <a class="navbar-brand mx-auto" href="{{ path('app_home_index') }}">
+                            <img src="{{ asset('images/logo.png') }}" alt="Logo de Shory" height="30">
                         </a>
 
-                        {# Bouton "hamburger" pour les écrans mobiles #}
+                        {# 2. Burger button for mobile #}
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
 
-                        {# Contenu de la navbar qui sera masqué sur mobile #}
+                        {# 3. right burger menu #}
                         <div class="collapse navbar-collapse" id="navbarNav">
-                            {# Laisser cette liste vide pour le moment #}
-                            <ul class="navbar-nav">
-                                {#
-                                Exemple de lien que vous pourriez ajouter plus tard :
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Lien 1</a>
-                                </li>
-                                #}
+                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                                {% if app.user %}
+                                    {# Connected user #}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_profile_user', {'user_id': app.user.id}) }}" data-turbo-frame="target-center">
+                                            Mon Profil
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                                    </li>
+                                {% else %}
+                                    {# Non connected user #}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_login') }}" data-turbo-frame="target-center">
+                                            Connexion
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_register') }}" data-turbo-frame="target-center">
+                                            Créer un compte
+                                        </a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </div>
+
                     </div>
                 </nav>
             </header>
