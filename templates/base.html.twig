@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Shory{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Shory{% endblock %}</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    {% block stylesheets %}
+    {% endblock %}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
     <body class="d-flex flex-column vh-100">
@@ -24,37 +25,53 @@
                         </a>
 
                         {# 2. Burger button for mobile #}
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                                aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
 
                         {# 3. right burger menu #}
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                                {% if app.user %}
-                                    {# Connected user #}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_profile_user', {'user_id': app.user.id}) }}" data-turbo-frame="target-center">
-                                            Mon Profil
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
-                                    </li>
-                                {% else %}
-                                    {# Non connected user #}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_login') }}" data-turbo-frame="target-center">
-                                            Connexion
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ path('app_register') }}" data-turbo-frame="target-center">
-                                            Créer un compte
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            </ul>
+                        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasNavbar"
+                             aria-labelledby="offcanvasNavbarLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                    {% if app.user %}
+                                        {# Connected user #}
+                                        <li class="nav-item">
+                                            <a class="nav-link"
+                                               href="{{ path('app_profile_user', {'user_id': app.user.id}) }}"
+                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
+                                                Mon Profil
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('app_logout') }}"
+                                               data-bs-dismiss="offcanvas">Déconnexion</a>
+                                        </li>
+                                    {% else %}
+                                        {# Non connected user #}
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('app_login') }}"
+                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
+                                                Login
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ path('app_register') }}"
+                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
+                                                Create account
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
                         </div>
 
                     </div>
@@ -71,9 +88,11 @@
 
                 {# Main content #}
                 <main class="flex-grow-1 p-4 overflow-auto">
-                    <turbo-frame id="target-center">
-                        {% block target_center %}{% endblock %}
-                    </turbo-frame>
+                    {% block target_center %}
+                        <turbo-frame id="target-center">
+                            {% block target_center_turbo %}{% endblock %}
+                        </turbo-frame>
+                    {% endblock %}
                 </main>
 
                 {# ----- Right toolbar ----- #}
