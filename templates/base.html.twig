@@ -60,13 +60,13 @@
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_login') }}"
                                                data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
-                                                Login
+                                                Sign in
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_register') }}"
                                                data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
-                                                Create account
+                                                Sign up
                                             </a>
                                         </li>
                                     {% endif %}
@@ -81,11 +81,11 @@
             <div class="d-flex flex-grow-1 overflow-hidden">
 
                 {# ----- Left toolbar ----- #}
-                <div class="sidebar-container" data-controller="sidebar">
-                    <aside class="sidebar-panel p-3 bg-light" data-sidebar-target="panel">
+                <div class="sidebar-container" {{ stimulus_controler('sidebar') }}>
+                    <aside class="sidebar-panel p-3 bg-light" {{ stimulus_target('sidebar', 'panel') }}>
 
                         <div class="text-end mb-2">
-                            <button class="btn btn-sm btn-outline-secondary" data-action="click->sidebar#toggle">
+                            <button class="btn btn-sm btn-outline-secondary" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
                                 <i class="fas fa-times"></i> {# Icône "croix" #}
                             </button>
                         </div>
@@ -96,7 +96,7 @@
                             </turbo-frame>
                         {% endblock %}
                     </aside>
-                    <button class="sidebar-toggle" data-sidebar-target="button">
+                    <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -112,7 +112,7 @@
 
                 {# ----- Right toolbar ----- #}
                 <div class="sidebar-container sidebar-right" {{ stimulus_controller('sidebar') }}>
-                    <button class="sidebar-toggle" {{ stimulus_target('sidebar', 'button') }}>
+                    <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
                         <i class="fas fa-chevron-left"></i>
                     </button>
                     <aside class="sidebar-panel p-3 bg-white border-start" {{ stimulus_target('sidebar', 'panel') }}>
