@@ -12,15 +12,15 @@
 }
 
 .sidebar-toggle {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background: #6c757d;
+    border: 1px solid #5a6268;
     border-left: none;
     width: 25px;
     display: none; /* see sidebarController.ts */
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #6c757d;
+    color: white;
 }
 
 .sidebar-container.sidebar-right .sidebar-toggle {
