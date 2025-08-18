@@ -10,7 +10,7 @@
 
                     <div class="card shadow">
                         <div class="card-body p-4">
-                            <form method="post">
+                            <form method="post" action="{{ path('app_login') }}" data-turbo-frame="_top">
                                 {% if error %}
                                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                                 {% endif %}
@@ -54,7 +54,7 @@
                                 <div class="text-center mt-4">
                                     <p>
                                         Don't have an account yet?
-                                        <a href="{{ path('app_register') }}">Register here!</a>
+                                        <a href="{{ path('app_register') }}">Sign up here!</a>
                                     </p>
                                 </div>
                             </form>

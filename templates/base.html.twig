@@ -33,7 +33,7 @@
 
                         {# 3. right burger menu #}
                         <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasNavbar"
-                             aria-labelledby="offcanvasNavbarLabel">
+                             aria-labelledby="offcanvasNavbarLabel" {{ stimulus_controller('offcanvas-closer') }}>
                             <div class="offcanvas-header">
                                 <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
@@ -46,13 +46,13 @@
                                         <li class="nav-item">
                                             <a class="nav-link"
                                                href="{{ path('app_profile_user') }}"
-                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
+                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
                                                 Account
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_logout') }}"
-                                               data-bs-dismiss="offcanvas">
+                                                {{ stimulus_action('offcanvas-closer', 'close', 'click') }} data-turbo-frame="_top">
                                                 Logout
                                             </a>
                                         </li>
@@ -61,13 +61,13 @@
 
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_login') }}"
-                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
+                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
                                                 Sign in
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_register') }}"
-                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
+                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
                                                 Sign up
                                             </a>
                                         </li>
