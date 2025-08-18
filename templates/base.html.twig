@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Shory{% endblock %}</title>
@@ -33,7 +33,7 @@
 
                         {# 3. right burger menu #}
                         <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasNavbar"
-                             aria-labelledby="offcanvasNavbarLabel">
+                             aria-labelledby="offcanvasNavbarLabel" {{ stimulus_controller('offcanvas-closer') }}>
                             <div class="offcanvas-header">
                                 <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
@@ -45,28 +45,30 @@
                                         {# Connected user #}
                                         <li class="nav-item">
                                             <a class="nav-link"
-                                               href="{{ path('app_profile_user', {'user_id': app.user.id}) }}"
-                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
-                                                Mon Profil
+                                               href="{{ path('app_profile_user') }}"
+                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
+                                                Account
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_logout') }}"
-                                               data-bs-dismiss="offcanvas">Déconnexion</a>
+                                                {{ stimulus_action('offcanvas-closer', 'close', 'click') }} data-turbo-frame="_top">
+                                                Logout
+                                            </a>
                                         </li>
                                     {% else %}
                                         {# Non connected user #}
 
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_login') }}"
-                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
-                                                Login
+                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
+                                                Sign in
                                             </a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('app_register') }}"
-                                               data-turbo-frame="target-center" data-bs-dismiss="offcanvas">
-                                                Create account
+                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
+                                                Sign up
                                             </a>
                                         </li>
                                     {% endif %}
@@ -77,14 +79,29 @@
                     </div>
                 </nav>
             </header>
-            {# ----- Main contener ----- #}
+            {# ----- Main container ----- #}
             <div class="d-flex flex-grow-1 overflow-hidden">
+
                 {# ----- Left toolbar ----- #}
-                <aside class="p-3 bg-light" style="width: 200px;">
-                    <turbo-frame id="target-left">toto
-                        {% block target_left %}{% endblock %}
-                    </turbo-frame>
-                </aside>
+                <div class="sidebar-container" {{ stimulus_controller('sidebar') }}>
+                    <aside class="sidebar-panel p-3 text-bg-secondary" {{ stimulus_target('sidebar', 'panel') }}>
+
+                        <div class="text-end mb-2">
+                            <button class="btn btn-sm btn-outline-secondary" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        {% block target_left %}
+                            <turbo-frame id="target-left">
+                                {% block target_left_turbo %}{% endblock %}
+                            </turbo-frame>
+                        {% endblock %}
+                    </aside>
+                    <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
 
                 {# Main content #}
                 <main class="flex-grow-1 p-4 overflow-auto">
@@ -96,11 +113,25 @@
                 </main>
 
                 {# ----- Right toolbar ----- #}
-                <aside class="p-3 bg-white border-start" style="width: 250px;">
-                    <turbo-frame id="target-right">
-                        {% block target_right %}{% endblock %}
-                    </turbo-frame>
-                </aside>
+                <div class="sidebar-container sidebar-right" {{ stimulus_controller('sidebar') }}>
+                    <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <aside class="sidebar-panel p-3 text-bg-secondary border-start" {{ stimulus_target('sidebar', 'panel') }}>
+
+                        <div class="text-start mb-2">
+                            <button class="btn btn-sm btn-outline-secondary" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </div>
+
+                        {% block target_right %}
+                            <turbo-frame id="target-right">
+                                {% block target_right_turbo %}{% endblock %}
+                            </turbo-frame>
+                        {% endblock %}
+                    </aside>
+                </div>
             </div>
         {% endblock %}
     </body>

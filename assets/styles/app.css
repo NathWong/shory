@@ -1,1 +1,40 @@
 
+.sidebar-container {
+    position: relative;
+    display: flex;
+}
+
+.sidebar-panel {
+    width: 200px; /* Panel width */
+    overflow: hidden;
+    transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
+    white-space: nowrap;
+}
+
+.sidebar-toggle {
+    background: #6c757d;
+    border: 1px solid #5a6268;
+    border-left: none;
+    width: 25px;
+    display: none; /* see sidebarController.ts */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+}
+
+.sidebar-container.sidebar-right .sidebar-toggle {
+    border-left: 1px solid #dee2e6;
+    border-right: none;
+}
+
+/* --- Collapsed style --- */
+.sidebar-container.sidebar--collapsed .sidebar-panel {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar-container.sidebar--collapsed .sidebar-toggle {
+    display: flex; /* show the button when collapsed */
+}

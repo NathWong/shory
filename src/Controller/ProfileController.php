@@ -40,7 +40,7 @@ final class ProfileController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $userProfile = $this->getUserProfile() ?: new UserProfile();
-        $userProfile->setAccount($user);
+        $userProfile->setAccount($this->getProfiledUser());
         $form = $this->createForm(UserProfileType::class, $userProfile);
         $form->handleRequest($request);
 
