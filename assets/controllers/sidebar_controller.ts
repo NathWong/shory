@@ -1,17 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller<HTMLElement> {
-    static classes = ['collapsed'];
     static targets = ['panel', "button"];
 
-    declare readonly collapsedClass: string;
+    private readonly collapsedClass: string = 'collapsed';
     declare readonly panelTarget: HTMLDivElement;
     declare readonly buttonTarget: HTMLButtonElement;
     declare readonly hasPanelTarget: boolean;
 
     connect() {
         this.buttonTarget.addEventListener('click', () => this.toggle());
-        console.log('toto')
         // wait to be sure turbo has time to do his stuff
         setTimeout(() => this.checkIfEmpty(), 0);
     }
