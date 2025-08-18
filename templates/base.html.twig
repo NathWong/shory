@@ -77,14 +77,22 @@
                     </div>
                 </nav>
             </header>
-            {# ----- Main contener ----- #}
+            {# ----- Main container ----- #}
             <div class="d-flex flex-grow-1 overflow-hidden">
+
                 {# ----- Left toolbar ----- #}
-                <aside class="p-3 bg-light" style="width: 200px;">
-                    <turbo-frame id="target-left">toto
-                        {% block target_left %}{% endblock %}
-                    </turbo-frame>
-                </aside>
+                <div class="sidebar-container" data-controller="sidebar">
+                    <aside class="sidebar-panel p-3 bg-light" data-sidebar-target="panel">
+                        {% block target_left %}
+                            <turbo-frame id="target-left">
+                                {% block target_left_turbo %}{% endblock %}
+                            </turbo-frame>
+                        {% endblock %}
+                    </aside>
+                    <button class="sidebar-toggle" data-sidebar-target="button">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
 
                 {# Main content #}
                 <main class="flex-grow-1 p-4 overflow-auto">
@@ -96,11 +104,18 @@
                 </main>
 
                 {# ----- Right toolbar ----- #}
-                <aside class="p-3 bg-white border-start" style="width: 250px;">
-                    <turbo-frame id="target-right">
-                        {% block target_right %}{% endblock %}
-                    </turbo-frame>
-                </aside>
+                <div class="sidebar-container sidebar-right" data-controller="sidebar">
+                    <button class="sidebar-toggle" data-sidebar-target="button">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <aside class="sidebar-panel p-3 bg-white border-start" data-sidebar-target="panel">
+                        {% block target_right %}
+                            <turbo-frame id="target-right">
+                                {% block target_right_turbo %}{% endblock %}
+                            </turbo-frame>
+                        {% endblock %}
+                    </aside>
+                </div>
             </div>
         {% endblock %}
     </body>
