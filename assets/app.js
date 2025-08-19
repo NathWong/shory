@@ -2,6 +2,7 @@ import './bootstrap.js';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/app.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 /*
  * Welcome to your app's main JavaScript file!
  *
