@@ -1,0 +1,11 @@
+{% macro burger_list(content, link, target = 'target-center') %}
+    <li class="nav-item">
+        <a class="nav-link"
+           href="{{ path(link) }}"
+           data-turbo-frame= "{{ target }}"
+            {{ stimulus_action('offcanvas-closer', 'close', 'click') }}
+        >
+            {{ content | trans }}
+        </a>
+    </li>
+{% endmacro %}

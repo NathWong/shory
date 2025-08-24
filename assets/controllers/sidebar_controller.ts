@@ -1,4 +1,4 @@
-import { Controller } from '@hotwired/stimulus';
+import {Controller} from '@hotwired/stimulus';
 
 export default class extends Controller<HTMLElement> {
     static targets = ['panel'];
@@ -8,8 +8,13 @@ export default class extends Controller<HTMLElement> {
     declare readonly hasPanelTarget: boolean;
 
     connect() {
+        window.addEventListener('turbo:frame-load', () => this.checkIfEmpty())
         // wait to be sure turbo has time to do his stuff
         setTimeout(() => this.checkIfEmpty(), 0);
+    }
+
+    disconnect() {
+        window.removeEventListener('turbo:frame-load', () => this.checkIfEmpty())
     }
 
     toggle(): void {
@@ -19,6 +24,7 @@ export default class extends Controller<HTMLElement> {
     }
 
     private checkIfEmpty(): void {
+        console.log('check if empty')
         if (!this.hasPanelTarget) return;
 
         const turboFrame = this.panelTarget.querySelector('turbo-frame');

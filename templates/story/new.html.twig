@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StoryController!{% endblock %}
+
+{% block target_center_turbo %}
+    {{ form_start(form, {'action': path('app_story_new')}) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+{% endblock %}

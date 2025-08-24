@@ -10,4 +10,3 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
  * which should already be in your base.html.twig.
  */
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

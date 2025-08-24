@@ -1,3 +1,5 @@
+{% import "helpers/global_helper.html.twig" as helper %}
+
 <!DOCTYPE html>
 <html lang="en-en">
 <head>
@@ -20,7 +22,7 @@
             <div class="container-fluid">
 
                 {# 1. logo - link to home #}
-                <a class="navbar-brand mx-auto" href="{{ path('app_home_index') }}">
+                <a class="navbar-brand mx-auto" href="{{ path('app_home_index') }}" data-frame-turbo="_top">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo de Shory" height="30">
                 </a>
 
@@ -43,35 +45,14 @@
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             {% if app.user %}
                                 {# Connected user #}
-                                <li class="nav-item">
-                                    <a class="nav-link"
-                                       href="{{ path('app_profile_user') }}"
-                                       data-turbo-frame="target-center"{{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
-                                        Account
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_logout') }}"
-                                        {{ stimulus_action('offcanvas-closer', 'close', 'click') }}
-                                       data-turbo-frame="_top">
-                                        Logout
-                                    </a>
-                                </li>
+                                {{ helper.burger_list('New story', 'app_story_new') }}
+                                {{ helper.burger_list('My stories', 'app_story_index') }}
+                                {{ helper.burger_list('Account', 'app_profile_user') }}
+                                {{ helper.burger_list('Logout', 'app_logout', '_top') }}
                             {% else %}
-
                                 {# Non connected user #}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_login') }}"
-                                       data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
-                                        Sign in
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_register') }}"
-                                       data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
-                                        Sign up
-                                    </a>
-                                </li>
+                                {{ helper.burger_list('Sign in', 'app_login') }}
+                                {{ helper.burger_list('Sign up', 'app_register') }}
                             {% endif %}
                         </ul>
                     </div>
@@ -115,7 +96,9 @@
         </main>
 
         {# ----- Right toolbar ----- #}
-        <div class="sidebar-container sidebar-right" {{ stimulus_controller('sidebar') }}>
+        <div class="sidebar-container sidebar-right"
+            {{ stimulus_controller('sidebar') }}
+        >
             <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
                 <i class="fas fa-chevron-left"></i>
             </button>

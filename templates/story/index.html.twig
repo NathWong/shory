@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello StoryController!{% endblock %}
+
+{% block target_center_turbo %}
+    <table>
+        <thead>
+            <th>Title</th>
+            <th>Last update</th>
+            <th>Created at</th>
+        </thead>
+        <tbody>
+        {% for story in stories %}
+            <tr>
+                <td>
+                    <a href="{{ path('app_story_show', {'id': story.id}) }}">
+                        {{ story.title }}
+                    </a>
+                </td>
+                <td>
+                    {{ story.updatedAt|date("m/d/Y") }}
+                </td>
+                <td>
+                    {{ story.createdAt|date("m/d/Y") }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

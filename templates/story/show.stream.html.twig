@@ -1,0 +1,38 @@
+{#{% extends 'base.html.twig' %}#}
+
+{#{% block target_center_turbo %}#}
+{#    <h1>{{ story.Title }}</h1>#}
+{#    <p>{{ story.Summary }}</p>#}
+{#{% endblock %}#}
+
+{#{% block target_right_turbo %}#}
+{#    <ul>#}
+{#        <li>#}
+{#            <a data-frame-turbo="target-center"#}
+{#               href="{{ path('app_chapter_new', {'story_id': story.id}) }}"#}
+{#            >#}
+{#                New chapter#}
+{#            </a>#}
+{#        </li>#}
+{#    </ul>#}
+{#{% endblock %}#}
+<turbo-stream action="update" target="target-center">
+    <template>
+        <h1>{{ story.Title }}</h1>
+        <p>{{ story.Summary }}</p>
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" target="target-right">
+    <template>
+        <ul>{% dump story %}
+            <li>
+                <a data-frame-turbo="target-center"
+                   href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
+                >
+                    New chapter
+                </a>
+            </li>
+        </ul>
+    </template>
+</turbo-stream>
