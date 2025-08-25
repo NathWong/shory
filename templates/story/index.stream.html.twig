@@ -1,8 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_stream.html.twig' %}
 
-{% block title %}Hello StoryController!{% endblock %}
-
-{% block target_center_turbo %}
+{% block template_center %}
     <table>
         <thead>
             <th>Title</th>
@@ -13,7 +11,9 @@
         {% for story in stories %}
             <tr>
                 <td>
-                    <a href="{{ path('app_story_show', {'id': story.id}) }}">
+                    <a href="{{ path('app_story_show', {'id': story.id}) }}"
+                       data-turbo-stream=""
+                    >
                         {{ story.title }}
                     </a>
                 </td>

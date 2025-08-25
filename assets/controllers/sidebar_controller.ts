@@ -8,13 +8,15 @@ export default class extends Controller<HTMLElement> {
     declare readonly hasPanelTarget: boolean;
 
     connect() {
-        window.addEventListener('turbo:frame-load', () => this.checkIfEmpty())
+        this.element.addEventListener('sidebar-content:open', () => this.open())
+        window.addEventListener('check', () => this.checkIfEmpty())
         // wait to be sure turbo has time to do his stuff
         setTimeout(() => this.checkIfEmpty(), 0);
     }
 
     disconnect() {
-        window.removeEventListener('turbo:frame-load', () => this.checkIfEmpty())
+        this.element.removeEventListener('sidebar-content:open', () => this.open())
+        this.element.removeEventListener('sidebar-content:close', () => this.close())
     }
 
     toggle(): void {
@@ -24,15 +26,23 @@ export default class extends Controller<HTMLElement> {
     }
 
     private checkIfEmpty(): void {
-        console.log('check if empty')
         if (!this.hasPanelTarget) return;
 
         const turboFrame = this.panelTarget.querySelector('turbo-frame');
 
         if (!turboFrame || turboFrame.innerHTML.trim() === '') {
-            this.element.classList.add('d-none');
+            this.close();
         } else {
-            this.element.classList.remove('d-none');
+            this.open();
         }
+    }
+
+    private open(): void
+    {
+        this.element.classList.remove('d-none');
+    }
+
+    private close(): void {
+        this.element.classList.add('d-none');
     }
 }

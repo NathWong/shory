@@ -43,4 +43,10 @@ final class ChapterController extends AbstractController
             'story' => $story,
         ]);
     }
+
+    #[Route('/show/{id}', name: 'app_chapter_show', methods: ['GET'])]
+    public function show(Chapter $chapter): Response
+    {
+        return $this->render('chapter/show.stream.html.twig', ['chapter' => $chapter]);
+    }
 }

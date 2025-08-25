@@ -3,6 +3,7 @@
         <a class="nav-link"
            href="{{ path(link) }}"
            data-turbo-frame= "{{ target }}"
+           data-turbo-stream=""
             {{ stimulus_action('offcanvas-closer', 'close', 'click') }}
         >
             {{ content | trans }}

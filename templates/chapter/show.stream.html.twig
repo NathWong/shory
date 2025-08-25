@@ -1,0 +1,9 @@
+{% extends 'base_stream.html.twig' %}
+
+{% set action_right = 'append' %}
+
+{% block template_center %}
+    {{ chapter.title }}
+    {{ chapter.content }}
+{% endblock %}
+

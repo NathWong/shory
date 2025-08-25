@@ -1,38 +1,26 @@
-{#{% extends 'base.html.twig' %}#}
+{% extends 'base_stream.html.twig' %}
+{% import 'helpers/right_menu_helper.html.twig' as menuHelper %}
 
-{#{% block target_center_turbo %}#}
-{#    <h1>{{ story.Title }}</h1>#}
-{#    <p>{{ story.Summary }}</p>#}
-{#{% endblock %}#}
+{% block template_center %}
+    <h1>{{ story.Title }}</h1>
+    <p>{{ story.Summary }}</p>
+{% endblock %}
 
-{#{% block target_right_turbo %}#}
-{#    <ul>#}
-{#        <li>#}
-{#            <a data-frame-turbo="target-center"#}
-{#               href="{{ path('app_chapter_new', {'story_id': story.id}) }}"#}
-{#            >#}
-{#                New chapter#}
-{#            </a>#}
-{#        </li>#}
-{#    </ul>#}
-{#{% endblock %}#}
-<turbo-stream action="update" target="target-center">
-    <template>
-        <h1>{{ story.Title }}</h1>
-        <p>{{ story.Summary }}</p>
-    </template>
-</turbo-stream>
-
-<turbo-stream action="update" target="target-right">
-    <template>
-        <ul>{% dump story %}
-            <li>
-                <a data-frame-turbo="target-center"
-                   href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
-                >
-                    New chapter
-                </a>
-            </li>
-        </ul>
-    </template>
-</turbo-stream>
+{% block template_right %}
+    {% set list %}
+        {% for chapter in chapters %}
+            {{ menuHelper.list_item(
+                path('app_chapter_show', {'id': chapter.id}),
+                'bi bi-book',
+                chapter.title
+            ) }}
+        {% endfor %}
+        {{ menuHelper.list_separator() }}
+        {{ menuHelper.list_item(
+            path('app_chapter_new', {'story_id': story.id}),
+            'bi bi-plus-circle-fill',
+            'New chapter'
+        ) }}
+    {% endset %}
+    {{ menuHelper.list_formater('Chapters', list) }}
+{% endblock %}

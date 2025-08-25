@@ -47,18 +47,20 @@ final class StoryController extends AbstractController
     }
 
     #[Route('/index', name: 'app_story_index', methods: ['GET'])]
-    public function index(StoryRepository $storyRepository): Response
+    public function index(StoryRepository $storyRepository, Request $request): Response
     {
         $stories = $storyRepository->findBy(['owner' => $this->getUserProfile()->getId()], ['updatedAt' => 'DESC']);
+        $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
 
-        return $this->render('story/index.html.twig', ['stories' => $stories]);
+        return $this->render('story/index.stream.html.twig', ['stories' => $stories]);
     }
 
     #[Route('/show/{id}', name: 'app_story_show', methods: ['GET'])]
     public function show(Request $request, Story $story): Response
     {
         $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+        $chapters = $story->getChapters();
 
-        return $this->render('story/show.stream.html.twig', ['story' => $story]);
+        return $this->render('story/show.stream.html.twig', ['story' => $story, 'chapters' => $chapters]);
     }
 }
