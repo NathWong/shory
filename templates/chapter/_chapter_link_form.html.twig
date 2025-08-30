@@ -1,0 +1,24 @@
+<div class="card mb-3" data-form-collection-item>
+    <div class="card-body">
+        <div class="d-flex justify-content-end mb-2">
+            <button type="button" class="btn btn-sm btn-danger" {{ stimulus_action('form_collection', 'remove', 'click') }}>
+                Remove
+            </button>
+        </div>
+
+        <div class="form-floating mb-3">
+            {{ form_widget(linkForm.responses, {'attr': {'placeholder': 'Response', 'class': 'form-control'}}) }}
+            {{ form_label(linkForm.responses, 'Response') }}
+        </div>
+
+        <div class="form-floating mb-3">
+            {{ form_widget(linkForm.target, {'attr': {'placeholder': 'Targeted Chapter', 'class': 'form-select'}}) }}
+            {{ form_label(linkForm.target, 'Targeted Chapter') }}
+        </div>
+
+        {{ form_errors(linkForm) }}
+
+        {# get the id for edit #}
+        {{ form_widget(linkForm.id) }}
+    </div>
+</div>

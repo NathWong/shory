@@ -46,6 +46,7 @@ class ChapterLinkResponse
         $this->updateTranslationKey($alias, null);
         unset($this->aliases[array_search($alias, $this->aliases, true)]);
 
+        return $this;
     }
 
     public function addTranslation(string $locale, string $key, string $value): self

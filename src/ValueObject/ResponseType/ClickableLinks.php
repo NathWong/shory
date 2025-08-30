@@ -22,4 +22,9 @@ readonly class ClickableLinks implements ChapterLinkTypeInterface
     {
         return 'toto';
     }
+
+    public static function getName(): string
+    {
+        return 'Direct links';
+    }
 }
