@@ -1,3 +1,5 @@
+{% import "helpers/global_helper.html.twig" as helper %}
+
 <!DOCTYPE html>
 <html lang="en-en">
 <head>
@@ -10,129 +12,120 @@
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% block ckeditor %}
+            <script>
+                var CKEDITOR_BASEPATH = '{{ asset('bundles/fosckeditor/') }}';
+            </script>
+
+            <script src="{{ asset('bundles/fosckeditor/ckeditor.js') }}"></script>
         {% endblock %}
-    </head>
-    <body class="d-flex flex-column vh-100">
-        {% block body %}
-        {# ----- Up toolbar ----- #}
-            <header>
-                <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-                    <div class="container-fluid">
+    {% endblock %}
+</head>
+<body class="d-flex flex-column vh-100" data-turbo-preload="false">
+{% block body %}
+    {# ----- Up toolbar ----- #}
+    <header>
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+            <div class="container-fluid">
 
-                        {# 1. logo - link to home #}
-                        <a class="navbar-brand mx-auto" href="{{ path('app_home_index') }}">
-                            <img src="{{ asset('images/logo.png') }}" alt="Logo de Shory" height="30">
-                        </a>
+                {# 1. logo - link to home #}
+                <a class="navbar-brand mx-auto" href="{{ path('app_home_index') }}" data-frame-turbo="_top">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo de Shory" height="30">
+                </a>
 
-                        {# 2. Burger button for mobile #}
-                        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
-                                aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+                {# 2. Burger button for mobile #}
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                        {# 3. right burger menu #}
-                        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasNavbar"
-                             aria-labelledby="offcanvasNavbarLabel" {{ stimulus_controller('offcanvas-closer') }}>
-                            <div class="offcanvas-header">
-                                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="offcanvas-body">
-                                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                                    {% if app.user %}
-                                        {# Connected user #}
-                                        <li class="nav-item">
-                                            <a class="nav-link"
-                                               href="{{ path('app_profile_user') }}"
-                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
-                                                Account
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('app_logout') }}"
-                                                {{ stimulus_action('offcanvas-closer', 'close', 'click') }} data-turbo-frame="_top">
-                                                Logout
-                                            </a>
-                                        </li>
-                                    {% else %}
-                                        {# Non connected user #}
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('app_login') }}"
-                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
-                                                Sign in
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ path('app_register') }}"
-                                               data-turbo-frame="target-center" {{ stimulus_action('offcanvas-closer', 'close', 'click') }}>
-                                                Sign up
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                        </div>
-
+                {# 3. right burger menu #}
+                <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasNavbar"
+                     aria-labelledby="offcanvasNavbarLabel" {{ stimulus_controller('offcanvas-closer') }}>
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                                aria-label="Close"></button>
                     </div>
-                </nav>
-            </header>
-            {# ----- Main container ----- #}
-            <div class="d-flex flex-grow-1 overflow-hidden">
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                            {% if app.user %}
+                                {# Connected user #}
+                                {{ helper.burger_list('New story', 'app_story_new') }}
+                                {{ helper.burger_list('My stories', 'app_story_index') }}
+                                {{ helper.burger_list('Account', 'app_profile_user') }}
+                                {{ helper.burger_list('Logout', 'app_logout', '_top') }}
+                            {% else %}
+                                {# Non connected user #}
+                                {{ helper.burger_list('Sign in', 'app_login') }}
+                                {{ helper.burger_list('Sign up', 'app_register') }}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
 
-                {# ----- Left toolbar ----- #}
-                <div class="sidebar-container" {{ stimulus_controller('sidebar') }}>
-                    <aside class="sidebar-panel p-3 text-bg-secondary" {{ stimulus_target('sidebar', 'panel') }}>
+            </div>
+        </nav>
+    </header>
+    {# ----- Main container ----- #}
+    <div class="d-flex flex-grow-1 overflow-hidden">
 
-                        <div class="text-end mb-2">
-                            <button class="btn btn-sm btn-outline-secondary" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        </div>
+        {# ----- Left toolbar ----- #}
+        <div class="sidebar-container" {{ stimulus_controller('sidebar') }}>
+            <aside class="sidebar-panel p-3 text-bg-secondary" {{ stimulus_target('sidebar', 'panel') }}>
 
-                        {% block target_left %}
-                            <turbo-frame id="target-left">
-                                {% block target_left_turbo %}{% endblock %}
-                            </turbo-frame>
-                        {% endblock %}
-                    </aside>
-                    <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
+                <div class="text-end mb-2">
+                    <button
+                        class="btn btn-sm btn-outline-secondary" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
 
-                {# Main content #}
-                <main class="flex-grow-1 p-4 overflow-auto">
-                    {% block target_center %}
-                        <turbo-frame id="target-center">
-                            {% block target_center_turbo %}{% endblock %}
-                        </turbo-frame>
-                    {% endblock %}
-                </main>
+                {% block target_left %}
+                    <turbo-frame id="target-left">
+                        {% block target_left_turbo %}{% endblock %}
+                    </turbo-frame>
+                {% endblock %}
+            </aside>
+            <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
 
-                {# ----- Right toolbar ----- #}
-                <div class="sidebar-container sidebar-right" {{ stimulus_controller('sidebar') }}>
-                    <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
+        {# Main content #}
+        <main class="flex-grow-1 p-4 overflow-auto">
+            {% block target_center %}
+                <turbo-frame id="target-center">
+                    {% block target_center_turbo %}{% endblock %}
+                </turbo-frame>
+            {% endblock %}
+        </main>
+
+        {# ----- Right toolbar ----- #}
+        <div class="sidebar-container sidebar-right"
+            {{ stimulus_controller('sidebar') }}
+        >
+            <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <aside class="sidebar-panel p-3 text-bg-secondary border-start" {{ stimulus_target('sidebar', 'panel') }}>
+
+                <div class="text-start mb-2">
+                    <button
+                        class="btn btn-sm btn-outline-secondary" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <aside class="sidebar-panel p-3 text-bg-secondary border-start" {{ stimulus_target('sidebar', 'panel') }}>
-
-                        <div class="text-start mb-2">
-                            <button class="btn btn-sm btn-outline-secondary" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                        </div>
-
-                        {% block target_right %}
-                            <turbo-frame id="target-right">
-                                {% block target_right_turbo %}{% endblock %}
-                            </turbo-frame>
-                        {% endblock %}
-                    </aside>
                 </div>
-            </div>
-        {% endblock %}
-    </body>
+
+                {% block target_right %}
+                    <turbo-frame id="target-right">
+                        {% block target_right_turbo %}{% endblock %}
+                    </turbo-frame>
+                {% endblock %}
+            </aside>
+        </div>
+    </div>
+{% endblock %}
+</body>
 </html>

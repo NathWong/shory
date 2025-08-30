@@ -1,0 +1,21 @@
+{% set action_left = 'update' %}
+{% set action_center = 'update' %}
+{% set action_right = 'update' %}
+
+<turbo-stream action="{{ action_left }}" target="target-left">
+    <template>
+        {% block template_left %}{% endblock %}
+    </template>
+</turbo-stream>
+
+<turbo-stream action="{{ action_center }}" target="target-center">
+    <template>
+        {% block template_center %}{% endblock %}
+    </template>
+</turbo-stream>
+
+<turbo-stream action="{{ action_right }}" target="target-right">
+    <template>
+        {% block template_right %}{% endblock %}
+    </template>
+</turbo-stream>

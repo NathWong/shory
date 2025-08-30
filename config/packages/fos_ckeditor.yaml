@@ -1,0 +1,14 @@
+# Read the documentation: https://symfony.com/doc/current/bundles/FOSCKEditorBundle/index.html
+
+twig:
+    form_themes:
+        - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
+
+fos_ck_editor:
+    input_sync: true
+    configs:
+        my_config:
+            toolbar:
+                - [ 'Bold', 'Italic', 'Underline', '-', 'Link', 'Unlink', '-', 'Image' ]
+                - [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', '-', 'Font', 'FontSize' ]
+            font_names: 'Arial/Arial, Helvetica, sans-serif;Times New Roman/Times New Roman, Times, serif;Verdana/Verdana, Geneva, sans-serif;Comic Sans MS/Comic Sans MS, cursive;Courier New/Courier New, Courier, monospace'

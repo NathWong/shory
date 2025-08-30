@@ -6,6 +6,7 @@ use App\Contract\ProfiledUserInterface;
 use App\Entity\UserProfile;
 use App\Form\UserProfileType;
 use App\Repository\UserProfileRepository;
+use App\Trait\ProfiledUserTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +19,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
 final class ProfileController extends AbstractController
 {
+    use ProfiledUserTrait;
+
     #[Route('/user', name: 'app_profile_user', methods: ['GET'])]
     public function profile(): Response
     {
@@ -94,21 +97,5 @@ final class ProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('app_profile_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    private function getProfiledUser(): ProfiledUserInterface
-    {
-        $user = $this->getUser();
-
-        if (!($user instanceof ProfiledUserInterface)) {
-            throw new UnsupportedUserException('User should implement '.ProfiledUserInterface::class);
-        }
-
-        return $user;
-    }
-
-    private function getUserProfile(): ?UserProfile
-    {
-        return $this->getProfiledUser()->getUserProfile();
     }
 }

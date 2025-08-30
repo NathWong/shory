@@ -1,0 +1,20 @@
+{% macro list_formater(title, list) %}
+<div class="list-group" {{ stimulus_controller('sidebar-content') }}>
+    <h5 class="text-white mb-3">{{ title | trans }}</h5>
+    {{ list | raw }}
+</div>
+{% endmacro %}
+
+{% macro list_item(href, icon, text) %}
+    <a href="{{ href }}"
+       class="list-group-item list-group-item-action bg-transparent border-0 text-white py-2 d-flex align-items-center"
+       data-turbo-stream=""
+    >
+        <i class="{{ icon }} me-3" style="width: 20px;"></i>
+        <span>{{ text | trans }}</span>
+    </a>
+{% endmacro %}
+
+{% macro list_separator() %}
+    <hr class="text-white-50">
+{% endmacro %}

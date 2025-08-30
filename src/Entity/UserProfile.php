@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserProfileRepository::class)]
@@ -31,6 +33,24 @@ class UserProfile
     #[ORM\OneToOne(inversedBy: 'userProfile', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $account = null;
+
+    /**
+     * @var Collection<int, Story>
+     */
+    #[ORM\OneToMany(targetEntity: Story::class, mappedBy: 'Owner')]
+    private Collection $stories;
+
+    /**
+     * @var Collection<int, Story>
+     */
+    #[ORM\ManyToMany(targetEntity: Story::class, mappedBy: 'Contributors')]
+    private Collection $contributions;
+
+    public function __construct()
+    {
+        $this->stories = new ArrayCollection();
+        $this->contributions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,6 +125,63 @@ class UserProfile
     public function setAccount(User $account): static
     {
         $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Story>
+     */
+    public function getStories(): Collection
+    {
+        return $this->stories;
+    }
+
+    public function addStory(Story $story): static
+    {
+        if (!$this->stories->contains($story)) {
+            $this->stories->add($story);
+            $story->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStory(Story $story): static
+    {
+        if ($this->stories->removeElement($story)) {
+            // set the owning side to null (unless already changed)
+            if ($story->getOwner() === $this) {
+                $story->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Story>
+     */
+    public function getContributions(): Collection
+    {
+        return $this->contributions;
+    }
+
+    public function addContribution(Story $contribution): static
+    {
+        if (!$this->contributions->contains($contribution)) {
+            $this->contributions->add($contribution);
+            $contribution->addContributor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContribution(Story $contribution): static
+    {
+        if ($this->contributions->removeElement($contribution)) {
+            $contribution->removeContributor($this);
+        }
 
         return $this;
     }
