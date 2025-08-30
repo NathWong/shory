@@ -3,10 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Chapter;
-use App\Entity\Story;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,8 +14,10 @@ class ChapterType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('content', TextareaType::class, [
-                'attr' => ['class' => 'tinymce'],
+            ->add('content', CKEditorType::class, [
+//                'label' => false,
+                'attr' => ['data-controller' => 'ckeditor'],
+//                'config' => ['toolbar' => 'my_config'],
             ])
         ;
     }

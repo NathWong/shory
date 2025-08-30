@@ -12,6 +12,13 @@
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% block ckeditor %}
+            <script>
+                var CKEDITOR_BASEPATH = '{{ asset('bundles/fosckeditor/') }}';
+            </script>
+
+            <script src="{{ asset('bundles/fosckeditor/ckeditor.js') }}"></script>
+        {% endblock %}
     {% endblock %}
 </head>
 <body class="d-flex flex-column vh-100" data-turbo-preload="false">

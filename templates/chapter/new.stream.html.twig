@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_stream.html.twig' %}
 
-{% block target_center_turbo %}
+{% block template_center %}
     {{ form_start(form, {'action': path('app_chapter_new', {'story_id': story.id})}) }}
     {{ form_widget(form) }}
         <button class="btn">{{ button_label|default('Save') }}</button>

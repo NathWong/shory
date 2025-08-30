@@ -13,6 +13,6 @@ enum StoryStatus: string implements TranslatableInterface
 
     public function trans(TranslatorInterface $translator, ?string $locale = null): string
     {
-        // TODO: Implement trans() method.
+        return $translator->trans($this->value, locale: $locale);
     }
 }

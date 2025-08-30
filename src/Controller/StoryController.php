@@ -41,7 +41,7 @@ final class StoryController extends AbstractController
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }
 
-        return $this->render('story/new.html.twig', [
+        return $this->render('story/new.stream.html.twig', [
             'form' => $form,
         ]);
     }

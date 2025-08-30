@@ -6,7 +6,10 @@
 {% endmacro %}
 
 {% macro list_item(href, icon, text) %}
-    <a href="{{ href }}" class="list-group-item list-group-item-action bg-transparent border-0 text-white py-2 d-flex align-items-center">
+    <a href="{{ href }}"
+       class="list-group-item list-group-item-action bg-transparent border-0 text-white py-2 d-flex align-items-center"
+       data-turbo-stream=""
+    >
         <i class="{{ icon }} me-3" style="width: 20px;"></i>
         <span>{{ text | trans }}</span>
     </a>

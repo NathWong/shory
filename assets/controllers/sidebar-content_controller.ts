@@ -6,7 +6,6 @@ export default class extends Controller<HTMLElement> {
     }
 
     disconnect() {
-        window.dispatchEvent(new Event('check'))
-        // this.dispatch('close', {bubbles: true});
+        window.dispatchEvent(new Event('check'));
     }
 }
