@@ -1,5 +1,7 @@
 {% extends 'base_stream.html.twig' %}
 
+{% block template_right %}{% endblock %}
+
 {% block template_center %}
     {{ form_start(form, {'action': path('app_story_new')}) }}
     {{ form_widget(form) }}
