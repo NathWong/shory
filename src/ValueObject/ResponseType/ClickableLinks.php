@@ -15,7 +15,7 @@ readonly class ClickableLinks implements ChapterLinkTypeInterface
 
     public function show(): string
     {
-        return 'toto';
+        return 'chapterLink/_clickable_link.html.twig';
     }
 
     public function edit(): string

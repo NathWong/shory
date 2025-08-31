@@ -31,9 +31,10 @@ class ChapterLinkType extends AbstractType
                 'class' => Chapter::class,
                 'choice_label' => 'title',
                 'label' => 'Targeted Chapter',
+                'required' => false,
                 'attr' => ['class' => 'form-select']
             ])
-            ->add('id', HiddenType::class)
+            ->add('id', HiddenType::class, ['mapped' => false])
         ;
 
         $builder->get('responses')->addModelTransformer($this->responseTransformer);

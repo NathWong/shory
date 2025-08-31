@@ -27,9 +27,14 @@
                     </p>
                 </div>
 
-                {# --- Contenu du chapitre --- #}
                 <div class="chapter-content fs-5">
                     {{ chapter.content | raw }}
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        {{ include(link_twig, {'chapter_links': chapter.chapterLinks}) }}
+                    </div>
                 </div>
 
             </div>

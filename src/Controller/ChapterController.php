@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Chapter;
 use App\Entity\Story;
 use App\Form\ChapterType;
+use App\Service\ChapterLinkTypeManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,16 +43,18 @@ final class ChapterController extends AbstractController
         return $this->render('chapter/new.stream.html.twig', [
             'form' => $form,
             'story' => $story,
+            'chapters' => $story->getChapters(),
         ]);
     }
 
     #[Route('/show/{id}', name: 'app_chapter_show', methods: ['GET'], format: TurboBundle::STREAM_FORMAT)]
-    public function show(Chapter $chapter): Response
+    public function show(Chapter $chapter, ChapterLinkTypeManager $manager): Response
     {
         return $this->render('chapter/show.stream.html.twig', [
             'chapter' => $chapter,
             'chapters' => $chapter->getStory()->getChapters(),
             'story' => $chapter->getStory(),
+            'link_twig' => $manager->getLinkShowTwig($chapter),
         ]);
     }
 
@@ -76,6 +79,7 @@ final class ChapterController extends AbstractController
             'form' => $form,
             'chapter' => $chapter,
             'story' => $chapter->getStory(),
+            'chapters' => $chapter->getStory()->getChapters(),
         ]);
     }
 }
