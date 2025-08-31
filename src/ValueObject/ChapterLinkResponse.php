@@ -2,13 +2,29 @@
 
 namespace App\ValueObject;
 
-class ChapterLinkResponse
+class ChapterLinkResponse implements \JsonSerializable
 {
+    /**
+     * @param string $response
+     * @param array|string[] $aliases
+     * @param array[] $translations
+     */
     public function __construct(
         private string $response,
         private array $aliases = [],
         private array $translations = [],
-    ) {}
+    ) {
+
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'response' => $this->response,
+            'aliases' => $this->aliases,
+            'translations' => $this->translations,
+        ];
+    }
 
     public function getResponse(): string
     {
