@@ -22,7 +22,7 @@ final class StoryController extends AbstractController
 {
     use ProfiledUserTrait;
 
-    #[Route('/new', name: 'app_story_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_story_new', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $story = new Story();
@@ -75,5 +75,27 @@ final class StoryController extends AbstractController
         $chapters = $story->getChapters();
 
         return $this->render('story/show.stream.html.twig', ['story' => $story, 'chapters' => $chapters]);
+    }
+
+    #[Route('/new/{id}', name: 'app_story_edit', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
+    public function edit(
+        Story $story,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $form = $this->createForm(NewStoryType::class, $story);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager->persist($story);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
+        }
+
+        return $this->render('story/new.stream.html.twig', [
+            'form' => $form,
+        ]);
     }
 }

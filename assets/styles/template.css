@@ -1,0 +1,11 @@
+.story-render-container.template-default {
+    background-color: #FFFFFF;
+    color: #212529;
+    font-family: 'Georgia', serif;
+}
+
+.story-render-container.template-dark {
+    background-color: #212529;
+    color: #dee2e6;
+    font-family: 'Times New Roman', serif;
+}

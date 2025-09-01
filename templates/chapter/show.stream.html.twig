@@ -27,7 +27,7 @@
                     </p>
                 </div>
 
-                <div class="chapter-content fs-5">
+                <div class="chapter-content fs-5 {{ template_class }}">
                     {{ chapter.content | markdown_to_html | sanitize_html('app.chapter_content') | raw }}
                 </div>
 

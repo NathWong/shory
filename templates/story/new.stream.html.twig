@@ -3,8 +3,39 @@
 {% block template_right %}{% endblock %}
 
 {% block template_center %}
-    {{ form_start(form, {'action': path('app_story_new')}) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-    {{ form_end(form) }}
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <h1 class="mb-4">Start a New Story</h1>
+
+                {{ form_start(form, {'action': path('app_story_new')}) }}
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.title) }}
+                    {{ form_label(form.title) }}
+                </div>
+
+                <div class="form-floating mb-4">
+                    {{ form_widget(form.genre) }}
+                    {{ form_label(form.genre) }}
+                </div>
+
+                <div class="form-floating mb-4">
+                    {{ form_widget(form.summary) }}
+                    {{ form_label(form.summary) }}
+                </div>
+
+                {{ form_rest(form) }}
+
+                <div class="d-flex justify-content-end mt-4">
+                    <a href="{{ path('app_home_index') }}" class="btn btn-secondary me-3">Cancel</a>
+                    <button class="btn btn-primary btn-lg">{{ button_label|default('Save and Continue') }}</button>
+                </div>
+
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
