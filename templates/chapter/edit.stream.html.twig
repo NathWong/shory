@@ -1,4 +1,5 @@
 {% extends 'story/show.stream.html.twig' %}
+{% import 'helpers/markdown_helper.html.twig' as mkd  %}
 
 {% block template_center %}
     <div class="container my-4">
@@ -13,8 +14,34 @@
                     {{ form_label(form.title) }}
                 </div>
 
-                <div class="mb-4">
-                    {{ form_widget(form.content) }}
+                <div class="border rounded-3 mb-4" {{ stimulus_controller('markdown_editor') }}>
+                    {# Tool bar #}
+                    <div class="btn-toolbar p-2 border-bottom bg-light rounded-top" role="toolbar">
+                        <div class="btn-group me-2" role="group">
+                            {{ mkd.toolbar_button('Bold', '<i class="bi bi-type-bold"></i>', '**%%text**') }}
+                            {{ mkd.toolbar_button('Italic', '<i class="bi bi-type-italic"></i>', '_%%text%%_') }}
+                            <div class="vr mx-2"></div>
+                            {{ mkd.toolbar_button('Title 1', '<i class="bi bi-type-h1"></i>', '# %%text%%') }}
+                            {{ mkd.toolbar_button('Title 2', '<i class="bi bi-type-h2"></i>', '## %%text%%') }}
+                            <div class="vr mx-2"></div>
+                            {{ mkd.toolbar_button('Quote', '<i class="bi bi-type-quote"></i>', '> %%text%%') }}
+                            {{ mkd.toolbar_button('List', '<i class="bi bi-type-ul"></i>', '* %%text%%') }}
+                        </div>
+                        <div class="btn-group ms-auto" role="group">
+                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                {{ stimulus_action('markdown_editor', 'edit') }}
+                                {{ stimulus_target('markdown_editor', 'editButton') }}
+                            >Edit</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                {{ stimulus_action('markdown_editor', 'preview') }}
+                                {{ stimulus_target('markdown_editor', 'previewButton') }}
+                            >Preview</button>
+                        </div>
+                    </div>
+
+                    {{ form_widget(form.content, {'attr': {'class': 'form-control border-0'}}) }}
+
+                    <div class="p-3 prose" {{ stimulus_target('markdown_editor', 'preview') }} style="display: none;"></div>
                 </div>
 
                 <div class="form-floating mb-3">

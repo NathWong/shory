@@ -8,6 +8,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,12 +30,12 @@ class ChapterType extends AbstractType
                     'class' => 'form-control',
                     ],
             ])
-            ->add('content', CKEditorType::class, [
+            ->add('content', TextareaType::class, [
                 'label' => false,
                 'attr' => [
-                    'data-controller' => 'ckeditor',
+                    'rows' => 15,
+                    'data-markdown-editor-target' => 'source',
                 ],
-                'config' => ['height' => '60vh'],
             ])
             ->add('linkType', ChoiceType::class, [
                 'label' => 'Link Type',

@@ -1,0 +1,7 @@
+{% macro toolbar_button(title, content, wrapper) %}
+    <button type="button" class="btn btn-sm btn-light"
+            title="{{ title | trans }}"
+        {{ stimulus_action('markdown_editor', 'wrapSelection') }}
+            data-pattern="{{ wrapper }}"
+    >{{ content | raw }}</button>
+{% endmacro %}

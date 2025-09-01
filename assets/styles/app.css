@@ -38,3 +38,21 @@
 .sidebar-container.sidebar--collapsed .sidebar-toggle {
     display: flex; /* show the button when collapsed */
 }
+
+/* Styles pour la prévisualisation Markdown */
+.prose {
+    line-height: 1.7;
+}
+.prose h1, .prose h2, .prose h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+.prose p {
+    margin-bottom: 1em;
+}
+.prose blockquote {
+    border-left: 3px solid #ccc;
+    padding-left: 1em;
+    color: #6c757d;
+    font-style: italic;
+}
