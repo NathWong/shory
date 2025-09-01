@@ -12,13 +12,6 @@
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% block ckeditor %}
-            <script>
-                var CKEDITOR_BASEPATH = '{{ asset('bundles/fosckeditor/') }}';
-            </script>
-
-            <script src="{{ asset('bundles/fosckeditor/ckeditor.js') }}"></script>
-        {% endblock %}
     {% endblock %}
 </head>
 <body class="d-flex flex-column vh-100" data-turbo-preload="false">
@@ -52,8 +45,6 @@
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             {% if app.user %}
                                 {# Connected user #}
-                                {{ helper.burger_list('New story', 'app_story_new') }}
-                                {{ helper.burger_list('My stories', 'app_story_index') }}
                                 {{ helper.burger_list('Account', 'app_profile_user') }}
                                 {{ helper.burger_list('Logout', 'app_logout', '_top') }}
                             {% else %}
@@ -73,7 +64,7 @@
 
         {# ----- Left toolbar ----- #}
         <div class="sidebar-container" {{ stimulus_controller('sidebar') }}>
-            <aside class="sidebar-panel p-3 text-bg-secondary" {{ stimulus_target('sidebar', 'panel') }}>
+            <aside class="sidebar-panel text-bg-secondary" {{ stimulus_target('sidebar', 'panel') }}>
 
                 <div class="text-end mb-2">
                     <button
@@ -109,12 +100,11 @@
             <button class="sidebar-toggle" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <aside class="sidebar-panel p-3 text-bg-secondary border-start" {{ stimulus_target('sidebar', 'panel') }}>
+            <aside class="sidebar-panel text-bg-secondary border-start" {{ stimulus_target('sidebar', 'panel') }}>
 
                 <div class="text-start mb-2">
                     <button
-                        class="btn btn-sm btn-outline-secondary" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
-                        <i class="fas fa-chevron-left"></i>
+                        class="btn-close btn-close-white" {{ stimulus_action('sidebar', 'toggle', 'click') }}>
                     </button>
                 </div>
 
