@@ -9,7 +9,12 @@
 
                 <h1 class="mb-4">Start a New Story</h1>
 
-                {{ form_start(form, {'action': path('app_story_new')}) }}
+                {% if edit %}
+                    {% set action = path('app_story_edit', {'id': story.id}) %}
+                {% else %}
+                    {% set action = path('app_story_new') %}
+                {% endif %}
+                {{ form_start(form, {'action': action}) }}
 
                 <div class="form-floating mb-3">
                     {{ form_widget(form.title) }}

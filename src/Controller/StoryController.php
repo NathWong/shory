@@ -44,6 +44,8 @@ final class StoryController extends AbstractController
 
         return $this->render('story/new.stream.html.twig', [
             'form' => $form,
+            'edit' => false,
+            'story' => $story,
         ]);
     }
 
@@ -77,7 +79,7 @@ final class StoryController extends AbstractController
         return $this->render('story/show.stream.html.twig', ['story' => $story, 'chapters' => $chapters]);
     }
 
-    #[Route('/new/{id}', name: 'app_story_edit', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/edit/{id}', name: 'app_story_edit', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
     public function edit(
         Story $story,
         Request $request,
@@ -96,6 +98,7 @@ final class StoryController extends AbstractController
 
         return $this->render('story/new.stream.html.twig', [
             'form' => $form,
+            'edit' => true,
         ]);
     }
 }
