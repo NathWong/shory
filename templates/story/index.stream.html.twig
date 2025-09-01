@@ -18,6 +18,7 @@
                 <div class="col-md-8">
                     <input type="text"
                            name="q"
+                           id="story-search"
                            class="form-control"
                            placeholder="Search by title..."
                            value="{{ searchTerm }}"
@@ -25,7 +26,11 @@
                     >
                 </div>
                 <div class="col-md-4">
-                    <select name="sort" class="form-select" {{ stimulus_action('auto-submit','submit', 'change') }}>
+                    <select name="sort"
+                            id="story-sort"
+                            class="form-select"
+                            {{ stimulus_action('auto-submit','submit', 'change') }}
+                    >
                         <option value="updatedAt" {{ sortBy == 'updatedAt' ? 'selected' }}>Sort by last update</option>
                         <option value="createdAt" {{ sortBy == 'createdAt' ? 'selected' }}>Sort by creation date</option>
                         <option value="title" {{ sortBy == 'title' ? 'selected' }}>Sort by title</option>
