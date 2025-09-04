@@ -12,6 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.5",
         "friendsofsymfony/ckeditor-bundle": "^2.6",
+        "league/commonmark": "^2.7",
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpstan/phpdoc-parser": "^2.2",
         "symfony/asset": "7.3.*",
@@ -23,6 +24,7 @@
         "symfony/flex": "^2",
         "symfony/form": "7.3.*",
         "symfony/framework-bundle": "7.3.*",
+        "symfony/html-sanitizer": "7.3.*",
         "symfony/http-client": "7.3.*",
         "symfony/intl": "7.3.*",
         "symfony/mailer": "7.3.*",
@@ -45,7 +47,8 @@
         "symfony/web-link": "7.3.*",
         "symfony/yaml": "7.3.*",
         "symfonycasts/verify-email-bundle": "^1.17",
-        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/extra-bundle": "^3.21",
+        "twig/markdown-extra": "^3.21",
         "twig/twig": "^2.12|^3.0"
     },
     "config": {

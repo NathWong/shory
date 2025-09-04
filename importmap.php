@@ -39,4 +39,15 @@ return [
         'version' => '7.0.0',
         'type' => 'css',
     ],
+    'marked' => [
+        'version' => '16.2.1',
+    ],
+    'bootstrap-icons/font/bootstrap-icons.css' => [
+        'version' => '1.13.1',
+        'type' => 'css',
+    ],
+    'dompurify' => [
+        'version' => '3.2.6',
+        'type' => 'js',
+    ],
 ];

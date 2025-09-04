@@ -3,7 +3,7 @@ import {Controller} from '@hotwired/stimulus';
 export default class extends Controller<HTMLElement> {
     static targets = ['panel'];
 
-    private readonly collapsedClass: string = 'collapsed';
+    private readonly collapsedClass: string = 'sidebar--collapsed';
     declare readonly panelTarget: HTMLDivElement;
     declare readonly hasPanelTarget: boolean;
 

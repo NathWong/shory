@@ -1,14 +1,42 @@
 {% extends 'base.html.twig' %}
+{% import'helpers/global_helper.html.twig' as helper %}
+
+{% block title %}Tableau de bord - Shory{% endblock %}
 
 {% block target_center_turbo %}
-    <h1>Hello there! ✅</h1>
+    <div class="container py-4">
 
-    <div class="text-center my-5">
+        {# --- Welcome message --- #}
+        <div class="mb-5">
+            {% if app.user %}
+                <h1 class="display-5">Welcome, {{ app.user.userProfile.firstName }} !</h1>
+                <p class="lead text-muted">What do you want to do today?</p>
+            {% else %}
+                <h1 class="display-5">Welcome to Shory</h1>
+                <p class="lead text-muted">Sign in or sign up to start writing</p>
+            {% endif %}
+        </div>
 
-        <img src="{{ asset('images/logo.png') }}"
-             alt="Shory logo"
-             height="500"
-             class="img-fluid  rounded shadow-lg">
+        {# --- Widgets --- #}
+        {% if app.user %}
+            <div class="row g-4">
+
+                {{ helper.widget_card(
+                    '<i class="bi bi-book me-2"></i>My stories',
+                    'View, edit, and manage all the stories you\'ve created.',
+                    path('app_story_index'),
+                    'See all'
+                ) }}
+
+                {{ helper.widget_card(
+                    '<i class="bi bi-plus-circle me-2"></i>New story',
+                    'Let your imagination run wild and start writing a new adventure.',
+                    path('app_story_new'),
+                    'Start a new story'
+                ) }}
+
+            </div>
+        {% endif %}
 
     </div>
 {% endblock %}

@@ -49,7 +49,7 @@ class Chapter implements CreatedUpdatedInterface
     /**
      * @var Collection<int, ChapterLink>
      */
-    #[ORM\OneToMany(targetEntity: ChapterLink::class, mappedBy: 'Source', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ChapterLink::class, mappedBy: 'Source', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $chapterLinks;
 
     public function __construct()

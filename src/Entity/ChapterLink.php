@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use App\Doctrine\Type\ChapterLinkResponseType;
 use App\Repository\ChapterLinkRepository;
 use App\ValueObject\ChapterLinkResponse;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChapterLinkRepository::class)]
@@ -22,7 +22,7 @@ class ChapterLink
     #[ORM\JoinColumn(nullable: false)]
     private ?Chapter $Source = null;
 
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(type: ChapterLinkResponseType::NAME)]
     private ?ChapterLinkResponse $responses = null;
 
     public function getId(): ?int

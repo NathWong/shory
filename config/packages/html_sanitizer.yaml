@@ -1,0 +1,18 @@
+framework:
+    html_sanitizer:
+        sanitizers:
+            app.chapter_content:
+                allow_safe_elements: true
+                allow_elements:
+                    h1: '*'
+                    h2: '*'
+                    h3: '*'
+                    ul: '*'
+                    ol: '*'
+                    li: '*'
+                    strong: '*'
+                    em: '*'
+                    b: '*'
+                    i: '*'
+                    p: '*'
+                    br: '*'

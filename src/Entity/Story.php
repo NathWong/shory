@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Contract\CreatedUpdatedInterface;
+use App\Enum\StoryGenreEnum;
 use App\Repository\StoryRepository;
 use App\Trait\CreatedUpdatedTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -51,6 +52,12 @@ class Story implements CreatedUpdatedInterface
      */
     #[ORM\OneToMany(targetEntity: Chapter::class, mappedBy: 'story', orphanRemoval: true)]
     private Collection $chapters;
+
+    #[ORM\Column(type: 'string', nullable: true, enumType: StoryGenreEnum::class)]
+    private ?StoryGenreEnum $genre = null;
+
+    #[ORM\Column(length: 50, nullable: true, options: ['default' => 'default'])]
+    private ?string $template = 'default';
 
     public function __construct()
     {
@@ -185,6 +192,30 @@ class Story implements CreatedUpdatedInterface
                 $chapter->setStory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGenre(): ?StoryGenreEnum
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(?StoryGenreEnum $genre): static
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function getTemplate(): ?string
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(?string $template): static
+    {
+        $this->template = $template;
 
         return $this;
     }
