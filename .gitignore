@@ -6,6 +6,7 @@
 /public/bundles/
 /var/
 /vendor/
+/node_modules/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
@@ -28,4 +29,3 @@ Makefile.local
 
 assets/controllers/*.js
 assets/controllers/*.js.map
-/node_modules
