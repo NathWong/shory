@@ -1,8 +1,6 @@
-{% extends 'base_stream.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block template_right %}{% endblock %}
-
-{% block template_center %}
+{% block target_center_turbo %}
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
@@ -34,7 +32,7 @@
                 {{ form_rest(form) }}
 
                 <div class="d-flex justify-content-end mt-4">
-                    <a href="{{ path('app_home_index') }}" class="btn btn-secondary me-3">Cancel</a>
+                    <a href="{{ path('app_home') }}" class="btn btn-secondary me-3">Cancel</a>
                     <button class="btn btn-primary btn-lg">{{ button_label|default('Save and Continue') }}</button>
                 </div>
 

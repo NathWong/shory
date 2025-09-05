@@ -22,7 +22,7 @@ use Symfony\UX\Turbo\TurboBundle;
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
 final class ChapterController extends AbstractController
 {
-    #[Route('/new/{story_id}', name: 'app_chapter_new', format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/new/{story_id}', name: 'app_chapter_new')]
     #[IsGranted(StoryVoter::EDIT, subject: 'story')]
     public function create(
         #[MapEntity(mapping: ['story_id' => 'id'])]
@@ -44,14 +44,14 @@ final class ChapterController extends AbstractController
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }
 
-        return $this->render('chapter/new.stream.html.twig', [
+        return $this->render('chapter/new.html.twig', [
             'form' => $form,
             'story' => $story,
             'chapters' => $story->getChapters(),
         ]);
     }
 
-    #[Route('/show/{id}', name: 'app_chapter_show', methods: ['GET'], format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/show/{id}', name: 'app_chapter_show', methods: ['GET'])]
     #[IsGranted(ChapterVoter::VIEW, subject: 'chapter')]
     public function show(
         Chapter $chapter,
@@ -60,7 +60,7 @@ final class ChapterController extends AbstractController
     ): Response {
         $template = $templateManager->getTemplateClass($chapter->getStory()) ?? 'default';
 
-        return $this->render('chapter/show.stream.html.twig', [
+        return $this->render('chapter/show.html.twig', [
             'chapter' => $chapter,
             'chapters' => $chapter->getStory()->getChapters(),
             'story' => $chapter->getStory(),
@@ -69,7 +69,7 @@ final class ChapterController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'app_chapter_edit', format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/edit/{id}', name: 'app_chapter_edit')]
     #[IsGranted(ChapterVoter::EDIT, subject: 'chapter')]
     public function edit(
         Chapter                $chapter,
@@ -86,7 +86,7 @@ final class ChapterController extends AbstractController
             return $this->redirectToRoute('app_chapter_show', ['id' => $chapter->getId()]);
         }
 
-        return $this->render('chapter/edit.stream.html.twig', [
+        return $this->render('chapter/edit.html.twig', [
             'form' => $form,
             'chapter' => $chapter,
             'story' => $chapter->getStory(),

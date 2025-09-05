@@ -1,12 +1,12 @@
-{% extends 'base_stream.html.twig' %}
+{% extends 'base.html.twig' %}
 {% import 'helpers/right_menu_helper.html.twig' as menuHelper %}
 {% import 'helpers/story_helper.html.twig' as storyHelper %}
 
-{% block template_center %}
+{% block target_center_turbo %}
     <div class="text-center">
         <a href="{{ path('app_story_index') }}"
            class="btn btn-outline-secondary"
-           data-turbo-stream=""
+           data-turbo-frame="target-center"
         >
             <i class="bi bi-arrow-left-circle me-2"></i>
             Back to stories list
@@ -24,7 +24,7 @@
                         {% if app.user and app.user.userProfile == story.owner %}
                             <a href="{{ path('app_story_edit', {'id': story.id}) }}"
                                class="btn btn-secondary"
-                               data-turbo-stream=""
+                               data-turbo-frame="target-center"
                             >
                                 <i class="bi bi-pencil-square"></i> Edit
                             </a>
@@ -54,7 +54,6 @@
                         <a href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
                            class="btn btn-outline-primary btn-sm"
                            data-turbo-frame="target-center"
-                           data-turbo-stream=""
                         >
                             <i class="bi bi-plus-circle"></i> New chapter
                         </a>
@@ -65,7 +64,7 @@
                     {% for chapter in story.chapters %}
                         <a href="{{ path('app_chapter_show', {'id': chapter.id}) }}"
                            class="list-group-item list-group-item-action py-3"
-                           data-turbo-stream=""
+                           data-turbo-frame="target-center"
                         >
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">{{ chapter.title }}</h5>
@@ -80,7 +79,6 @@
                                 <a href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
                                    class="btn btn-primary"
                                    data-turbo-frame="target-center"
-                                   data-turbo-stream
                                 >
                                     <i class="bi bi-pen-fill me-2"></i>Write the first chapter
                                 </a>

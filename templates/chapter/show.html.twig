@@ -1,10 +1,10 @@
-{% extends 'story/show.stream.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block template_center %}
+{% block target_center_turbo %}
     <div class="text-center">
         <a href="{{ path('app_story_show', {'id': story.id}) }}"
            class="btn btn-outline-secondary"
-           data-turbo-stream=""
+           data-turbo-frame="target-center"
         >
             <i class="bi bi-arrow-left-circle me-2"></i>
             Back to story
@@ -23,7 +23,7 @@
                         {% if app.user and app.user.userProfile == chapter.story.owner %}
                             <a href="{{ path('app_chapter_edit', {'id': chapter.id}) }}"
                                class="btn btn-secondary"
-                               data-turbo-stream=""
+                               data-turbo-frame="target-center"
                             >Edit</a>
                         {% endif %}
                     </div>

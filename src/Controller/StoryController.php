@@ -24,7 +24,7 @@ final class StoryController extends AbstractController
 {
     use ProfiledUserTrait;
 
-    #[Route('/new', name: 'app_story_new', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/new', name: 'app_story_new', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $story = new Story();
@@ -44,7 +44,7 @@ final class StoryController extends AbstractController
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }
 
-        return $this->render('story/new.stream.html.twig', [
+        return $this->render('story/new.html.twig', [
             'form' => $form,
             'edit' => false,
             'story' => $story,
@@ -55,7 +55,6 @@ final class StoryController extends AbstractController
         '/index',
         name: 'app_story_index',
         methods: ['GET'],
-        format: TurboBundle::STREAM_FORMAT
     )]
     public function index(
         StoryRepository $storyRepository,
@@ -65,7 +64,7 @@ final class StoryController extends AbstractController
     ): Response {
         $stories = $storyRepository->findByFilters($this->getUserProfile(), $q, $sort);
 
-        return $this->render('story/index.stream.html.twig', [
+        return $this->render('story/index.html.twig', [
             'stories' => $stories,
             'searchTerm' => $q,
             'sortBy' => $sort,
@@ -73,7 +72,7 @@ final class StoryController extends AbstractController
             ]);
     }
 
-    #[Route('/show/{id}', name: 'app_story_show', methods: ['GET'], format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/show/{id}', name: 'app_story_show', methods: ['GET'])]
     #[IsGranted(StoryVoter::VIEW, subject: 'story')]
     public function show(
         Story $story,
@@ -81,14 +80,14 @@ final class StoryController extends AbstractController
     ): Response {
         $chapters = $story->getChapters();
 
-        return $this->render('story/show.stream.html.twig', [
+        return $this->render('story/show.html.twig', [
             'story' => $story,
             'chapters' => $chapters,
             'template' => $templateManager->getTemplate($story->getTemplate()),
             ]);
     }
 
-    #[Route('/edit/{id}', name: 'app_story_edit', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/edit/{id}', name: 'app_story_edit', methods: ['GET', 'POST'])]
     #[IsGranted(StoryVoter::EDIT, subject: 'story')]
     public function edit(
         Story $story,
@@ -104,7 +103,7 @@ final class StoryController extends AbstractController
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }
 
-        return $this->render('story/new.stream.html.twig', [
+        return $this->render('story/new.html.twig', [
             'story' => $story,
             'form' => $form,
             'edit' => true,
