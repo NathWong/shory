@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Chapter;
 use App\Entity\Story;
 use App\Form\ChapterType;
+use App\Security\Voter\ChapterVoter;
+use App\Security\Voter\StoryVoter;
 use App\Service\ChapterLinkTypeManager;
 use App\Service\StoryTemplateManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,6 +23,7 @@ use Symfony\UX\Turbo\TurboBundle;
 final class ChapterController extends AbstractController
 {
     #[Route('/new/{story_id}', name: 'app_chapter_new', format: TurboBundle::STREAM_FORMAT)]
+    #[IsGranted(StoryVoter::EDIT, subject: 'story')]
     public function create(
         #[MapEntity(mapping: ['story_id' => 'id'])]
         Story                  $story,
@@ -49,6 +52,7 @@ final class ChapterController extends AbstractController
     }
 
     #[Route('/show/{id}', name: 'app_chapter_show', methods: ['GET'], format: TurboBundle::STREAM_FORMAT)]
+    #[IsGranted(ChapterVoter::VIEW, subject: 'chapter')]
     public function show(
         Chapter $chapter,
         ChapterLinkTypeManager $manager,
@@ -66,6 +70,7 @@ final class ChapterController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_chapter_edit', format: TurboBundle::STREAM_FORMAT)]
+    #[IsGranted(ChapterVoter::EDIT, subject: 'chapter')]
     public function edit(
         Chapter                $chapter,
         Request                $request,
@@ -76,7 +81,6 @@ final class ChapterController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($chapter);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_chapter_show', ['id' => $chapter->getId()]);

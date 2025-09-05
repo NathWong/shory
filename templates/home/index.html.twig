@@ -8,7 +8,7 @@
 
         {# --- Welcome message --- #}
         <div class="mb-5">
-            {% if app.user %}
+            {% if app.user and app.user.userProfile %}
                 <h1 class="display-5">Welcome, {{ app.user.userProfile.firstName }} !</h1>
                 <p class="lead text-muted">What do you want to do today?</p>
             {% else %}

@@ -1,5 +1,6 @@
 {% extends 'base_stream.html.twig' %}
 {% import 'helpers/right_menu_helper.html.twig' as menuHelper %}
+{% import 'helpers/story_helper.html.twig' as storyHelper %}
 
 {% block template_center %}
     <div class="text-center">
@@ -34,11 +35,14 @@
                         By : {{ story.owner.penName ? story.owner.penName : story.owner.firstName }} |
                         Create at : {{ story.createdAt|date('d M Y') }}
                     </p>
-                    {% if story.genre %}
-                        <p>
-                            Genre: <span class="badge text-bg-info">{{ story.genre.value }}</span>
-                        </p>
-                    {% endif %}
+                    {{ storyHelper.genre_tag(story) }}
+                    <div class="d-flex align-items-center">
+                        <span class="me-2">Template :</span>
+                        <span class="badge rounded-pill fs-6 fw-normal story-render-container {{ template.getCssClass }}">
+                            {{ template.getName }}
+                            <small class="fst-italic opacity-75">{{ template.getDescription }}</small>
+                        </span>
+                    </div>
                 </div>
 
                 <hr class="my-4">

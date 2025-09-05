@@ -6,6 +6,8 @@ use App\Entity\Story;
 use App\Enum\StoryStatus;
 use App\Form\NewStoryType;
 use App\Repository\StoryRepository;
+use App\Security\Voter\StoryVoter;
+use App\Service\StoryTemplateManager;
 use App\Trait\ProfiledUserTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,7 +59,7 @@ final class StoryController extends AbstractController
     )]
     public function index(
         StoryRepository $storyRepository,
-        Request $request,
+        StoryTemplateManager $storyTemplateManager,
         #[MapQueryParameter]?string $q = null,
         #[MapQueryParameter]string $sort = 'updatedAt',
     ): Response {
@@ -67,19 +69,27 @@ final class StoryController extends AbstractController
             'stories' => $stories,
             'searchTerm' => $q,
             'sortBy' => $sort,
+            'templateManager' => $storyTemplateManager,
             ]);
     }
 
-    #[Route('/show/{id}', name: 'app_story_show', methods: ['GET'])]
-    public function show(Request $request, Story $story): Response
-    {
-        $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    #[Route('/show/{id}', name: 'app_story_show', methods: ['GET'], format: TurboBundle::STREAM_FORMAT)]
+    #[IsGranted(StoryVoter::VIEW, subject: 'story')]
+    public function show(
+        Story $story,
+        StoryTemplateManager $templateManager,
+    ): Response {
         $chapters = $story->getChapters();
 
-        return $this->render('story/show.stream.html.twig', ['story' => $story, 'chapters' => $chapters]);
+        return $this->render('story/show.stream.html.twig', [
+            'story' => $story,
+            'chapters' => $chapters,
+            'template' => $templateManager->getTemplate($story->getTemplate()),
+            ]);
     }
 
     #[Route('/edit/{id}', name: 'app_story_edit', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
+    #[IsGranted(StoryVoter::EDIT, subject: 'story')]
     public function edit(
         Story $story,
         Request $request,
@@ -89,14 +99,13 @@ final class StoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $entityManager->persist($story);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }
 
         return $this->render('story/new.stream.html.twig', [
+            'story' => $story,
             'form' => $form,
             'edit' => true,
         ]);

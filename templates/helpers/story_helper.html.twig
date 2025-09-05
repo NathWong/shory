@@ -1,0 +1,5 @@
+{% macro genre_tag(story) %}
+    <span class="badge d-inline-block {{ story.genre.getColorClass }}">
+        {{ story.genre.value }}
+    </span>
+{% endmacro %}
