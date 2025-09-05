@@ -1,44 +1,40 @@
 {% extends 'base.html.twig' %}
 
 {% block target_center_turbo %}
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
+    <div class="my-5 col-lg-8 mx-auto">
 
-                <h1 class="mb-4">Start a New Story</h1>
+        <h1 class="mb-4">Start a New Story</h1>
 
-                {% if edit %}
-                    {% set action = path('app_story_edit', {'id': story.id}) %}
-                {% else %}
-                    {% set action = path('app_story_new') %}
-                {% endif %}
-                {{ form_start(form, {'action': action}) }}
+        {% if edit %}
+            {% set action = path('app_story_edit', {'id': story.id}) %}
+        {% else %}
+            {% set action = path('app_story_new') %}
+        {% endif %}
+        {{ form_start(form, {'action': action}) }}
 
-                <div class="form-floating mb-3">
-                    {{ form_widget(form.title) }}
-                    {{ form_label(form.title) }}
-                </div>
-
-                <div class="form-floating mb-4">
-                    {{ form_widget(form.genre) }}
-                    {{ form_label(form.genre) }}
-                </div>
-
-                <div class="form-floating mb-4">
-                    {{ form_widget(form.summary) }}
-                    {{ form_label(form.summary) }}
-                </div>
-
-                {{ form_rest(form) }}
-
-                <div class="d-flex justify-content-end mt-4">
-                    <a href="{{ path('app_home') }}" class="btn btn-secondary me-3">Cancel</a>
-                    <button class="btn btn-primary btn-lg">{{ button_label|default('Save and Continue') }}</button>
-                </div>
-
-                {{ form_end(form) }}
-
-            </div>
+        <div class="form-floating mb-3">
+            {{ form_widget(form.title) }}
+            {{ form_label(form.title) }}
         </div>
+
+        <div class="form-floating mb-4">
+            {{ form_widget(form.genre) }}
+            {{ form_label(form.genre) }}
+        </div>
+
+        <div class="form-floating mb-4">
+            {{ form_widget(form.summary) }}
+            {{ form_label(form.summary) }}
+        </div>
+
+        {{ form_rest(form) }}
+
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{{ path('app_home') }}" class="btn btn-secondary me-3">Cancel</a>
+            <button class="btn btn-primary btn-lg">{{ button_label|default('Save and Continue') }}</button>
+        </div>
+
+        {{ form_end(form) }}
+
     </div>
 {% endblock %}

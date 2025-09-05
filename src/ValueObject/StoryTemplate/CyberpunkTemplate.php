@@ -4,25 +4,25 @@ namespace App\ValueObject\StoryTemplate;
 
 use App\Contract\StoryTemplateInterface;
 
-final class DarkTemplate implements StoryTemplateInterface
+final class CyberpunkTemplate implements StoryTemplateInterface
 {
     public function getName(): string
     {
-        return 'Dark';
+        return 'Cyberpunk';
     }
 
     public function getDescription(): string
     {
-        return 'A dark theme for a dark story.';
+        return 'A futuristic, dark, high-tech terminal interface.';
     }
 
     public function getIdentifier(): string
     {
-        return 'dark';
+        return 'cyberpunk';
     }
 
     public function getCssClass(): string
     {
-        return 'template-dark';
+        return 'template-cyberpunk';
     }
 }

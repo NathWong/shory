@@ -2,58 +2,54 @@
 {% import 'helpers/markdown_helper.html.twig' as mkd  %}
 
 {% block target_center_turbo %}
-    <div class="container my-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-8">
+    <div class="my-4 col-lg-10 col-xl-8 mx-auto">
 
-                <h1 class="mb-4">Edit Chapter</h1>
-                {{ form_start(form, {'action': path('app_chapter_edit', {'id': chapter.id})}) }}
+        <h1 class="mb-4">Edit Chapter</h1>
+        {{ form_start(form, {'action': path('app_chapter_edit', {'id': chapter.id})}) }}
 
-                <div class="form-floating mb-3">
-                    {{ form_widget(form.title) }}
-                    {{ form_label(form.title) }}
-                </div>
-
-                {{ mkd.editor(form.content) }}
-
-                <div class="form-floating mb-3">
-                    {{ form_widget(form.linkType) }}
-                    {{ form_label(form.linkType) }}
-                </div>
-
-                <div class="my-4 p-3 border rounded-3 bg-body-tertiary" {{ stimulus_controller('form_collection') }}>
-                    {{ form_label(form.chapterLinks) }}
-
-                    <div {{ stimulus_target('form_collection', 'collectionContainer') }}
-                         data-prototype="{{ include('chapter/_chapter_link_form.html.twig', {linkForm: form.chapterLinks.vars.prototype})|e('html_attr')}}">
-
-                        {% for linkForm in form.chapterLinks %}
-                            {{ include('chapter/_chapter_link_form.html.twig', {linkForm: linkForm}) }}
-                        {% endfor %}
-                    </div>
-
-                    <button type="button" class="btn btn-secondary btn-sm mt-2"
-                            {{ stimulus_action('form_collection', 'add', 'click') }}
-                            data-turbo-frame="target-center"
-                    >
-                        Add link
-                    </button>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center mt-4">
-                    <a href="{{ path('app_chapter_show', {'id': chapter.id}) }}"
-                       class="btn btn-secondary me-3"
-                       data-turbo-frame="target-center"
-                    >
-                        Cancel
-                    </a>
-
-                    <button class="btn btn-primary btn-lg" data-turbo-frame="target-center">{{ button_label|default('Save modifications') }}</button>
-                </div>
-
-                {{ form_end(form) }}
-
-            </div>
+        <div class="form-floating mb-3">
+            {{ form_widget(form.title) }}
+            {{ form_label(form.title) }}
         </div>
+
+        {{ mkd.editor(form.content) }}
+
+        <div class="form-floating mb-3">
+            {{ form_widget(form.linkType) }}
+            {{ form_label(form.linkType) }}
+        </div>
+
+        <div class="my-4 p-3 border rounded-3 bg-body-tertiary" {{ stimulus_controller('form_collection') }}>
+            {{ form_label(form.chapterLinks) }}
+
+            <div {{ stimulus_target('form_collection', 'collectionContainer') }}
+                 data-prototype="{{ include('chapter/_chapter_link_form.html.twig', {linkForm: form.chapterLinks.vars.prototype})|e('html_attr')}}">
+
+                {% for linkForm in form.chapterLinks %}
+                    {{ include('chapter/_chapter_link_form.html.twig', {linkForm: linkForm}) }}
+                {% endfor %}
+            </div>
+
+            <button type="button" class="btn btn-secondary btn-sm mt-2"
+                    {{ stimulus_action('form_collection', 'add', 'click') }}
+                    data-turbo-frame="target-center"
+            >
+                Add link
+            </button>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center mt-4">
+            <a href="{{ path('app_chapter_show', {'id': chapter.id}) }}"
+               class="btn btn-secondary me-3"
+               data-turbo-frame="target-center"
+            >
+                Cancel
+            </a>
+
+            <button class="btn btn-primary btn-lg" data-turbo-frame="target-center">{{ button_label|default('Save modifications') }}</button>
+        </div>
+
+        {{ form_end(form) }}
+
     </div>
 {% endblock %}

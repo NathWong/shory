@@ -4,25 +4,25 @@ namespace App\ValueObject\StoryTemplate;
 
 use App\Contract\StoryTemplateInterface;
 
-final class DarkTemplate implements StoryTemplateInterface
+final class CrimsonTemplate implements StoryTemplateInterface
 {
     public function getName(): string
     {
-        return 'Dark';
+        return 'Crimson';
     }
 
     public function getDescription(): string
     {
-        return 'A dark theme for a dark story.';
+        return 'A gothic, dramatic and intense style.';
     }
 
     public function getIdentifier(): string
     {
-        return 'dark';
+        return 'crimson';
     }
 
     public function getCssClass(): string
     {
-        return 'template-dark';
+        return 'template-crimson';
     }
 }

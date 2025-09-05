@@ -4,25 +4,25 @@ namespace App\ValueObject\StoryTemplate;
 
 use App\Contract\StoryTemplateInterface;
 
-final class DarkTemplate implements StoryTemplateInterface
+final class NoirTemplate implements StoryTemplateInterface
 {
     public function getName(): string
     {
-        return 'Dark';
+        return 'Noir';
     }
 
     public function getDescription(): string
     {
-        return 'A dark theme for a dark story.';
+        return 'The atmosphere of a 1940s film noir.';
     }
 
     public function getIdentifier(): string
     {
-        return 'dark';
+        return 'noir';
     }
 
     public function getCssClass(): string
     {
-        return 'template-dark';
+        return 'template-noir';
     }
 }

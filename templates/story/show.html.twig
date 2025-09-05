@@ -12,84 +12,79 @@
             Back to stories list
         </a>
     </div>
-    <div class="container my-5">
+    <div class="my-5 col-lg-9 col-xl-8 mx-auto">
 
-        <div class="row justify-content-center">
-            <div class="col-lg-9 col-xl-8">
+        <div class="pb-3 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h1 class="display-5 fw-bold mb-0">{{ story.Title }}</h1>
 
-                <div class="pb-3 mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h1 class="display-5 fw-bold mb-0">{{ story.Title }}</h1>
-
-                        {% if app.user and app.user.userProfile == story.owner %}
-                            <a href="{{ path('app_story_edit', {'id': story.id}) }}"
-                               class="btn btn-secondary"
-                               data-turbo-frame="target-center"
-                            >
-                                <i class="bi bi-pencil-square"></i> Edit
-                            </a>
-                        {% endif %}
-                    </div>
-                    <p class="lead text-muted">{{ story.Summary }}</p>
-                    <p class="small text-muted">
-                        By : {{ story.owner.penName ? story.owner.penName : story.owner.firstName }} |
-                        Create at : {{ story.createdAt|date('d M Y') }}
-                    </p>
-                    {{ storyHelper.genre_tag(story) }}
-                    <div class="d-flex align-items-center">
-                        <span class="me-2">Template :</span>
-                        <span class="badge rounded-pill fs-6 fw-normal story-render-container {{ template.getCssClass }}">
+                {% if app.user and app.user.userProfile == story.owner %}
+                    <a href="{{ path('app_story_edit', {'id': story.id}) }}"
+                       class="btn btn-secondary"
+                       data-turbo-frame="target-center"
+                    >
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </a>
+                {% endif %}
+            </div>
+            <p class="lead text-muted">{{ story.Summary }}</p>
+            <p class="small text-muted">
+                By : {{ story.owner.penName ? story.owner.penName : story.owner.firstName }} |
+                Create at : {{ story.createdAt|date('d M Y') }}
+            </p>
+            {{ storyHelper.genre_tag(story) }}
+            <div class="d-flex align-items-center">
+                <span class="me-2">Template :</span>
+                <span class="badge rounded-pill fs-6 fw-normal story-render-container {{ template.getCssClass }}">
                             {{ template.getName }}
                             <small class="fst-italic opacity-75">{{ template.getDescription }}</small>
                         </span>
-                    </div>
-                </div>
-
-                <hr class="my-4">
-
-                {# --- Chapters --- #}
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="h4">Chapitres</h2>
-                    {% if app.user and app.user.userProfile == story.owner %}
-                        <a href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
-                           class="btn btn-outline-primary btn-sm"
-                           data-turbo-frame="target-center"
-                        >
-                            <i class="bi bi-plus-circle"></i> New chapter
-                        </a>
-                    {% endif %}
-                </div>
-
-                <div class="list-group list-group-flush">
-                    {% for chapter in story.chapters %}
-                        <a href="{{ path('app_chapter_show', {'id': chapter.id}) }}"
-                           class="list-group-item list-group-item-action py-3"
-                           data-turbo-frame="target-center"
-                        >
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ chapter.title }}</h5>
-                                <small class="text-muted">Last update {{ chapter.updatedAt|date('d M Y') }}</small>
-                            </div>
-                        </a>
-                    {% else %}
-                        <div class="list-group-item text-center p-5">
-                            {% if app.user and app.user.userProfile == story.owner %}
-                                <h5 class="mb-3">The first page is blank.</h5>
-                                <p class="text-muted mb-4">Every great adventure begins with a single chapter. Let's write yours.</p>
-                                <a href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
-                                   class="btn btn-primary"
-                                   data-turbo-frame="target-center"
-                                >
-                                    <i class="bi bi-pen-fill me-2"></i>Write the first chapter
-                                </a>
-                            {% else %}
-                                <p class="text-muted">No chapters have been written for this story yet. Check back soon!</p>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
-
             </div>
         </div>
+
+        <hr class="my-4">
+
+        {# --- Chapters --- #}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4">Chapitres</h2>
+            {% if app.user and app.user.userProfile == story.owner %}
+                <a href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
+                   class="btn btn-outline-primary btn-sm"
+                   data-turbo-frame="target-center"
+                >
+                    <i class="bi bi-plus-circle"></i> New chapter
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="list-group list-group-flush">
+            {% for chapter in story.chapters %}
+                <a href="{{ path('app_chapter_show', {'id': chapter.id}) }}"
+                   class="list-group-item list-group-item-action py-3"
+                   data-turbo-frame="target-center"
+                >
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ chapter.title }}</h5>
+                        <small class="text-muted">Last update {{ chapter.updatedAt|date('d M Y') }}</small>
+                    </div>
+                </a>
+            {% else %}
+                <div class="list-group-item text-center p-5">
+                    {% if app.user and app.user.userProfile == story.owner %}
+                        <h5 class="mb-3">The first page is blank.</h5>
+                        <p class="text-muted mb-4">Every great adventure begins with a single chapter. Let's write yours.</p>
+                        <a href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
+                           class="btn btn-primary"
+                           data-turbo-frame="target-center"
+                        >
+                            <i class="bi bi-pen-fill me-2"></i>Write the first chapter
+                        </a>
+                    {% else %}
+                        <p class="text-muted">No chapters have been written for this story yet. Check back soon!</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
     </div>
 {% endblock %}

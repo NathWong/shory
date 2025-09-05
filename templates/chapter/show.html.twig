@@ -10,44 +10,39 @@
             Back to story
         </a>
     </div>
-    <div class="container my-4 story-render-container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 col-xl-8">
+    <div class="my-4 story-render-container col-lg-9 col-xl-8 mx-auto">
 
-                {# --- Chapter Title --- #}
-                <div class="pb-3 mb-4 border-bottom">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h1 class="display-5 fw-bold">{{ chapter.title }}</h1>
+        {# --- Chapter Title --- #}
+        <div class="pb-3 mb-4 border-bottom">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="display-5 fw-bold">{{ chapter.title }}</h1>
 
-                        {# Edit only if  #}
-                        {% if app.user and app.user.userProfile == chapter.story.owner %}
-                            <a href="{{ path('app_chapter_edit', {'id': chapter.id}) }}"
-                               class="btn btn-secondary"
-                               data-turbo-frame="target-center"
-                            >Edit</a>
-                        {% endif %}
-                    </div>
+                {# Edit only if  #}
+                {% if app.user and app.user.userProfile == chapter.story.owner %}
+                    <a href="{{ path('app_chapter_edit', {'id': chapter.id}) }}"
+                       class="btn btn-secondary"
+                       data-turbo-frame="target-center"
+                    >Edit</a>
+                {% endif %}
+            </div>
 
-                    <p class="text-muted small">
-                        Created on {{ chapter.createdAt|date('d F Y') }}
-                        {% if chapter.updatedAt != chapter.createdAt %}
-                            - Updated on {{ chapter.updatedAt|date('d F Y') }}
-                        {% endif %}
-                    </p>
-                </div>
+            <p class="text-muted small">
+                Created on {{ chapter.createdAt|date('d F Y') }}
+                {% if chapter.updatedAt != chapter.createdAt %}
+                    - Updated on {{ chapter.updatedAt|date('d F Y') }}
+                {% endif %}
+            </p>
+        </div>
 
-                <div class="chapter-content fs-5 {{ template_class }}">
-                    {{ chapter.content | markdown_to_html | sanitize_html('app.chapter_content') | raw }}
-                </div>
+        <div class="chapter-content fs-5 {{ template_class }}">
+            {{ chapter.content | markdown_to_html | sanitize_html('app.chapter_content') | raw }}
+        </div>
 
-                <div class="card mb-3">
-                    <div class="card-body">
-                        {{ include(link_twig, {'chapter_links': chapter.chapterLinks}) }}
-                    </div>
-                </div>
-
+        <div class="card mb-3">
+            <div class="card-body">
+                {{ include(link_twig, {'chapter_links': chapter.chapterLinks}) }}
             </div>
         </div>
+
     </div>
 {% endblock %}
-
