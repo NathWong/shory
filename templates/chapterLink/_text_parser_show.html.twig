@@ -1,0 +1,7 @@
+{{ include('partials/_flash_messages.html.twig') }}
+<form action="{{ path('app_chapter_parse_input', {'id': chapter.id}) }}" method="post" data-turbo-frame="target-center">
+    <div class="input-group">
+        <input type="text" name="user_input" class="form-control" placeholder="What do you do?" aria-label="Player action" autofocus>
+        <button class="btn btn-outline-primary" type="submit">Go</button>
+    </div>
+</form>

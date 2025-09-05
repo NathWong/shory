@@ -1,0 +1,17 @@
+<div {{ stimulus_controller('form_collection') }}>
+    <h5 class="mt-4">Parser Rules</h5>
+    <p class="small text-muted">Define the keywords the reader can type and the chapter they will be redirected to.</p>
+
+    {# The container for the collection of rules #}
+    <div {{ stimulus_target('form_collection', 'collectionContainer') }}
+         data-prototype="{{ include('chapterLink/_text_parser_rule_prototype.html.twig', {ruleForm: form.vars.prototype})|e('html_attr') }}"
+    >
+        {% for ruleForm in form %}
+            {{ include('chapterLink/_text_parser_rule_prototype.html.twig', {ruleForm: ruleForm}) }}
+        {% endfor %}
+    </div>
+
+    <button type="button" class="btn btn-secondary btn-sm mt-2" {{ stimulus_action('form_collection', 'add') }}>
+        <i class="bi bi-plus-circle me-2"></i>Add Rule
+    </button>
+</div>

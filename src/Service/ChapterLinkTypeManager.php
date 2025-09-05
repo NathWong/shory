@@ -4,39 +4,57 @@ namespace App\Service;
 
 use App\Contract\ChapterLinkTypeInterface;
 use App\Entity\Chapter;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
-class ChapterLinkTypeManager
+readonly class ChapterLinkTypeManager
 {
+    /**
+     * @param iterable<ChapterLinkTypeInterface> $linkTypes
+     */
     public function __construct(
-        /** @var iterable|ChapterLinkTypeInterface[] $linkTypes */
         #[AutowireIterator('chapter.link_type')]
         private iterable $linkTypes,
     ) {
     }
 
-    public function getChapterLinkTypes(): array
+    public function getChoices(): array
     {
-        $data = [];
+        $choices = [];
         foreach ($this->linkTypes as $linkType) {
-            $data[$linkType::class] = $linkType::getName();
+            $choices[$linkType::getName()] = $linkType->getIdentifier();
         }
 
-        return $data;
+        return $choices;
     }
 
-    public function getLinkShowTwig(Chapter $chapter): string
+    public function getLinkShowTwig(Chapter $chapter): ?string
     {
-        $typeClass = $chapter->getLinkType();
-        $chapterType = new $typeClass($chapter);
-        if (!$chapterType instanceof ChapterLinkTypeInterface) {
-            throw new \RuntimeException(sprintf(
-                'Chapter links type "%s" does not implement "%s".',
-                $typeClass,
-                ChapterLinkTypeInterface::class,
-            ));
+        if (!$identifier = $chapter->getLinkType()){
+            return null;
         }
 
-        return $chapterType->show();
+        foreach ($this->linkTypes as $linkType) {
+            if ($linkType->getIdentifier() === $identifier) {
+                return $linkType->show();
+            }
+        }
+
+        throw new RuntimeException(sprintf('Unknown chapter link type "%s".', $identifier));
+    }
+
+    public function getLinkEditTwig(Chapter $chapter): ?string
+    {
+        if (!$identifier = $chapter->getLinkType()){
+            return null;
+        }
+
+        foreach ($this->linkTypes as $linkType) {
+            if ($linkType->getIdentifier() === $identifier) {
+                return $linkType->edit();
+            }
+        }
+
+        throw new RuntimeException(sprintf('Unknown chapter link type "%s".', $identifier));
     }
 }

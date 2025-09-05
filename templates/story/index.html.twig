@@ -2,6 +2,16 @@
 {% import 'helpers/story_helper.html.twig' as storyHelper %}
 
 {% block target_center_turbo %}
+    <div class="text-center mb-4">
+        <a href="{{ path('app_home') }}"
+           class="btn btn-outline-secondary"
+           data-turbo-frame="target-center"
+           data-turbo-action="advance"
+        >
+            <i class="bi bi-arrow-left-circle me-2"></i>
+            Back to Home
+        </a>
+    </div>
     <div class="container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>My Stories</h1>
@@ -56,6 +66,7 @@
                                 <a href="{{ path('app_story_show', {'id': story.id}) }}"
                                    class="btn btn-outline-secondary mt-auto"
                                    data-turbo-frame="target-center"
+                                   data-turbo-action="advance"
                                 >
                                     Open
                                 </a>

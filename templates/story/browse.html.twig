@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+{% import 'helpers/story_helper.html.twig' as storyHelper %}
+
+{% block target_center_turbo %}
+    <div class="text-center mb-4">
+        <a href="{{ path('app_home') }}"
+           class="btn btn-outline-secondary"
+           data-turbo-frame="target-center"
+           data-turbo-action="advance"
+        >
+            <i class="bi bi-arrow-left-circle me-2"></i>
+            Back to Home
+        </a>
+    </div>
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Browse Stories</h1>
+        </div>
+
+        {# --- Filters --- #}
+        <form action="{{ path('app_story_browse') }}"
+              method="get"
+              {{ stimulus_controller('auto-submit') }}
+              data-turbo-frame="stories-list">
+            <div class="row g-2 mb-4">
+                <div class="col-md-8">
+                    <input type="text"
+                           name="q"
+                           id="story-search"
+                           class="form-control"
+                           placeholder="Search by title..."
+                           value="{{ searchTerm }}"
+                           {{ stimulus_action('auto-submit','submit', 'input') }}
+                    >
+                </div>
+                <div class="col-md-4">
+                    <select name="sort"
+                            id="story-sort"
+                            class="form-select"
+                            {{ stimulus_action('auto-submit','submit', 'change') }}
+                    >
+                        <option value="updatedAt" {{ sortBy == 'updatedAt' ? 'selected' }}>Sort by last update</option>
+                        <option value="createdAt" {{ sortBy == 'createdAt' ? 'selected' }}>Sort by creation date</option>
+                        <option value="title" {{ sortBy == 'title' ? 'selected' }}>Sort by title</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        {# --- Stories --- #}
+        <turbo-frame id="stories-list">
+            <div class="row g-4">
+                {% for story in stories %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm story-render-container {{ templateManager.getTemplateClass(story) }}">
+                            <div class="card-body d-flex flex-column" >
+                                <h5 class="card-title">{{ story.title }}</h5>
+                                {{ storyHelper.genre_tag(story) }}
+                                <p class="card-text text-muted small">
+                                    Created at {{ story.createdAt|date('d/m/Y') }}<br>
+                                    Last update {{ story.updatedAt|date('d/m/Y') }}
+                                </p>
+                                <a href="{{ path('app_story_read', {'id': story.id}) }}"
+                                   class="btn btn-outline-secondary mt-auto"
+                                   data-turbo-frame="target-center"
+                                   data-turbo-action="advance"
+                                >
+                                    Read
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info">No stories found.</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </turbo-frame>
+    </div>
+{% endblock %}

@@ -1,3 +1,8 @@
+.story-render-container {
+    padding: 2rem; /* Add breathing room around the content */
+    border-radius: 0.5rem; /* Soften the corners */
+}
+
 .story-render-container.template-default {
     background-color: #FFFFFF;
     color: #212529;

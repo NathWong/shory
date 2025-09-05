@@ -6,7 +6,7 @@
             {% if chapter_link.target %}
                 <a href="{{ path('app_chapter_show', {'id': chapter_link.target.id}) }}"
                    class="btn btn-secondary"
-                   data-turbo-stream=""
+                   data-turbo-frame= "target-center"
                 >{{ chapter_link.responses.response }}</a>
             {% else %}
                 <span class="btn btn-outline-danger disabled"

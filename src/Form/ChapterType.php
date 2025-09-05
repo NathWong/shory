@@ -39,7 +39,7 @@ class ChapterType extends AbstractType
             ])
             ->add('linkType', ChoiceType::class, [
                 'label' => 'Link Type',
-                'choices' => \array_flip($this->chapterLinkTypeManager->getChapterLinkTypes()),
+                'choices' => $this->chapterLinkTypeManager->getChoices(),
                 'attr' => [
                     'placeholder' => 'Link Type',
                     'class' => 'form-select',

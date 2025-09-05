@@ -2,6 +2,8 @@
 
 namespace App\ValueObject;
 
+use function Symfony\Component\String\u;
+
 class ChapterLinkResponse implements \JsonSerializable
 {
     /**
@@ -91,5 +93,25 @@ class ChapterLinkResponse implements \JsonSerializable
             }
             unset($languageData[$oldKey]);
         }
+    }
+
+    public function isValid(string $userInput): bool
+    {
+        $response = u($this->response)->lower()->trim()->toString();
+
+        if ($response === $userInput) {
+            return true;
+        }
+
+        foreach ($this->aliases as $alias) {
+            $response = u($alias)->lower()->trim()->toString();
+            if ($response === $userInput) {
+                return true;
+            }
+        }
+
+        // @todo improve the system and add translations
+
+        return false;
     }
 }

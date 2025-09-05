@@ -14,9 +14,12 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\UX\Turbo\TurboBundle;
+use function PHPUnit\Framework\isArray;
+use function Symfony\Component\String\u;
 
 #[Route('/chapter')]
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
@@ -92,5 +95,32 @@ final class ChapterController extends AbstractController
             'story' => $chapter->getStory(),
             'chapters' => $chapter->getStory()->getChapters(),
         ]);
+    }
+
+    #[Route('/parse/{id}', name: 'app_chapter_parse_input', methods: ['POST'])]
+    #[IsGranted(ChapterVoter::VIEW, subject: 'chapter')]
+    public function parseInput(
+        Chapter $chapter,
+        Request $request,
+    ): Response
+    {
+        $userInput = u($request->get('user_input', ''))
+            ->lower()
+            ->trim()
+            ->toString();
+
+        if (empty($userInput)) {
+            return $this->redirectToRoute('app_chapter_show', ['id' => $chapter->getId()]);
+        }
+
+        foreach ($chapter->getChapterLinks() as $link) {
+            if ($link->getResponses()->isValid($userInput)) {
+                return $this->redirectToRoute('app_chapter_show', ['id' => $link->getTarget()->getId()]);
+            }
+        }
+
+        $this->addFlash('warning', sprintf('The command \'%s\' did not lead anywhere.', $userInput));
+
+        return $this->redirectToRoute('app_chapter_show', ['id' => $chapter->getId()]);
     }
 }

@@ -7,6 +7,7 @@
         <a href="{{ path('app_story_index') }}"
            class="btn btn-outline-secondary"
            data-turbo-frame="target-center"
+           data-turbo-action="advance"
         >
             <i class="bi bi-arrow-left-circle me-2"></i>
             Back to stories list
@@ -18,14 +19,24 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h1 class="display-5 fw-bold mb-0">{{ story.Title }}</h1>
 
-                {% if app.user and app.user.userProfile == story.owner %}
-                    <a href="{{ path('app_story_edit', {'id': story.id}) }}"
-                       class="btn btn-secondary"
-                       data-turbo-frame="target-center"
-                    >
-                        <i class="bi bi-pencil-square"></i> Edit
-                    </a>
-                {% endif %}
+                <div class="d-flex align-items-center">
+                    {% if app.user and app.user.userProfile == story.owner %}
+                        <a href="{{ path('app_story_edit', {'id': story.id}) }}"
+                           class="btn btn-secondary me-2"
+                           data-turbo-frame="target-center"
+                        >
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+
+                        {% if story.storyStatus != 'published' and story.storyStatus != 'waiting validation' %}
+                            {{ form_start(form, {'action': path('app_story_request_publish', {'id': story.id}), 'method': 'POST', 'attr': {'data-turbo': 'true'}}) }}
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-send"></i> Request Publication
+                                </button>
+                            {{ form_end(form) }}
+                        {% endif %}
+                    {% endif %}
+                </div>
             </div>
             <p class="lead text-muted">{{ story.Summary }}</p>
             <p class="small text-muted">
@@ -43,6 +54,26 @@
         </div>
 
         <hr class="my-4">
+
+        {# --- Moderation Messages --- #}
+        {% if moderationMessages is not empty %}
+            <div class="mb-4">
+                <h2 class="h4">Moderation History</h2>
+                <div class="list-group">
+                    {% for message in moderationMessages %}
+                        <div class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">From: {{ message.sender.userProfile.firstName }} ({{ message.sender.roles|join(', ') }})</h5>
+                                <small class="text-muted">{{ message.createdAt|date('d M Y H:i') }}</small>
+                            </div>
+                            <p class="mb-1">{{ message.message }}</p>
+                            <small class="text-muted">To: {{ message.receiver.userProfile.firstName }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr class="my-4">
+        {% endif %}
 
         {# --- Chapters --- #}
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -62,6 +93,7 @@
                 <a href="{{ path('app_chapter_show', {'id': chapter.id}) }}"
                    class="list-group-item list-group-item-action py-3"
                    data-turbo-frame="target-center"
+                   data-turbo-action="advance"
                 >
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{ chapter.title }}</h5>
