@@ -6,9 +6,12 @@ use App\Entity\UserProfile;
 use App\Form\UserProfileType;
 use App\Repository\UserProfileRepository;
 use App\Security\Voter\UserProfileVoter;
+use App\Service\AvatarHandler;
 use App\Trait\ProfiledUserTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -40,7 +43,11 @@ final class ProfileController extends AbstractController
     }
 
     #[Route('/new', name: 'app_profile_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        AvatarHandler $avatarHandler,
+    ): Response
     {
         if ($this->getUserProfile()) {
             return $this->redirectToRoute('app_profile_edit');
@@ -52,6 +59,9 @@ final class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $avatar = $form->get('avatar')->getData();
+            $avatarHandler->handleAvatar($avatar, $userProfile);
+
             $entityManager->persist($userProfile);
             $entityManager->flush();
 
@@ -78,8 +88,11 @@ final class ProfileController extends AbstractController
     }
 
     #[Route('/edit', name: 'app_profile_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function edit(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        AvatarHandler $avatarHandler,
+    ): Response {
         $userProfile = $this->getUserProfile();
         if (!$userProfile) {
             return $this->redirectToRoute('app_profile_new');
@@ -90,6 +103,9 @@ final class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $avatar = $form->get('avatar')->getData();
+            $avatarHandler->handleAvatar($avatar, $userProfile);
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_profile_show');

@@ -37,8 +37,12 @@ class StoryVoter extends Voter
 
         /** @var Story $story */
         $story = $subject instanceof Story ? $subject : $subject->getStory();
+        $storyGroup = $story->getStoryGroup();
+        if (!$storyGroup) {
+            return false;
+        }
 
-        $isOwner = $story->getOwner()->getAccount() === $user;
+        $isOwner = $storyGroup->getOwner()->getAccount() === $user;
         $isModerator = $this->security->isGranted('ROLE_MODERATOR');
 
         return match ($attribute) {

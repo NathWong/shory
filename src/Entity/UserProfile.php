@@ -6,6 +6,7 @@ use App\Repository\UserProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: UserProfileRepository::class)]
 class UserProfile
@@ -41,22 +42,29 @@ class UserProfile
     private Collection $stories;
 
     /**
-     * @var Collection<int, Story>
-     */
-    #[ORM\ManyToMany(targetEntity: Story::class, mappedBy: 'Contributors')]
-    private Collection $contributions;
-
-    /**
      * @var Collection<int, ReadingHistory>
      */
     #[ORM\OneToMany(targetEntity: ReadingHistory::class, mappedBy: 'userProfile', orphanRemoval: true)]
     private Collection $readingHistories;
+
+    /**
+     * @var Collection<int, StoryGroup>
+     */
+    #[ORM\OneToMany(targetEntity: StoryGroup::class, mappedBy: 'owner')]
+    private Collection $storyGroups;
+
+    /**
+     * @var Collection<int, Contributor>
+     */
+    #[ORM\OneToMany(targetEntity: Contributor::class, mappedBy: 'UserProfile', orphanRemoval: true)]
+    private Collection $contributions;
 
     public function __construct()
     {
         $this->stories = new ArrayCollection();
         $this->contributions = new ArrayCollection();
         $this->readingHistories = new ArrayCollection();
+        $this->storyGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +230,36 @@ class UserProfile
             // set the owning side to null (unless already changed)
             if ($readingHistory->getUserProfile() === $this) {
                 $readingHistory->setUserProfile(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, StoryGroup>
+     */
+    public function getStoryGroups(): Collection
+    {
+        return $this->storyGroups;
+    }
+
+    public function addStoryGroup(StoryGroup $storyGroup): static
+    {
+        if (!$this->storyGroups->contains($storyGroup)) {
+            $this->storyGroups->add($storyGroup);
+            $storyGroup->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStoryGroup(StoryGroup $storyGroup): static
+    {
+        if ($this->storyGroups->removeElement($storyGroup)) {
+            // set the owning side to null (unless already changed)
+            if ($storyGroup->getOwner() === $this) {
+                $storyGroup->setOwner(null);
             }
         }
 

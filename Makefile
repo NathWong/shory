@@ -109,7 +109,6 @@ db-reset:
 	$(SYMFONY_CONSOLE) doctrine:database:drop --force --if-exists
 	$(SYMFONY_CONSOLE) doctrine:database:create
 	$(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction
-	$(SYMFONY_CONSOLE) doctrine:fixtures:load --append # ou --purge-and-load si tu veux effacer les fixtures précédentes
 
 # -----------------------------------------------------------------------------
 # Commandes MakerBundle

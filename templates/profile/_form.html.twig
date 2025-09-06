@@ -1,4 +1,34 @@
-{{ form_start(form, {'action': path(action_path)}) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="col-lg-8">
+    {{ form_start(form, {'action': path(action_path)}) }}
+    {{ form_errors(form) }}
+
+    <div class="form-floating mb-3">
+        {{ form_widget(form.firstName) }}
+        {{ form_label(form.firstName) }}
+        {{ form_errors(form.firstName) }}
+    </div>
+
+    <div class="form-floating mb-3">
+        {{ form_widget(form.lastName) }}
+        {{ form_label(form.lastName) }}
+        {{ form_errors(form.lastName) }}
+    </div>
+
+    <div class="form-floating mb-3">
+        {{ form_widget(form.penName) }}
+        {{ form_label(form.penName) }}
+        {{ form_errors(form.penName) }}
+    </div>
+
+    <div class="form-floating mb-3">
+        {{ form_widget(form.avatar) }}
+        {{ form_label(form.avatar) }}
+        {{ form_errors(form.avatar) }}
+    </div>
+
+    <div class="d-flex justify-content-end mt-4">
+        <button class="btn btn-primary btn-lg">{{ button_label|default('Save') }}</button>
+    </div>
+
+    {{ form_end(form) }}
+</div>

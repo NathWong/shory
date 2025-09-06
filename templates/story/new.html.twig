@@ -12,30 +12,31 @@
         {% endif %}
         {{ form_start(form, {'action': action}) }}
 
+        {# Fields from StoryGroupType #}
         <div class="form-floating mb-3">
-            {{ form_widget(form.title) }}
-            {{ form_label(form.title) }}
+            {{ form_widget(form.storyGroup.title) }}
+            {{ form_label(form.storyGroup.title) }}
         </div>
-
         <div class="form-floating mb-4">
-            {{ form_widget(form.genre) }}
-            {{ form_label(form.genre) }}
+            {{ form_widget(form.storyGroup.genre) }}
+            {{ form_label(form.storyGroup.genre) }}
         </div>
-
         <div class="form-floating mb-4">
-            {{ form_widget(form.summary) }}
-            {{ form_label(form.summary) }}
+            {{ form_widget(form.storyGroup.template) }}
+            {{ form_label(form.storyGroup.template) }}
         </div>
 
+        {# Fields from StoryVersionType #}
         <div class="form-floating mb-4">
-            {{ form_widget(form.template) }}
-            {{ form_label(form.template) }}
+            {{ form_widget(form.version.summary) }}
+            {{ form_label(form.version.summary) }}
         </div>
 
-        {% if form.beginning is defined %}
+        {# Conditional field for starting chapter #}
+        {% if form.version.beginning is defined %}
             <div class="form-floating mb-4">
-                {{ form_widget(form.beginning) }}
-                {{ form_label(form.beginning, 'Starting Chapter') }}
+                {{ form_widget(form.version.beginning) }}
+                {{ form_label(form.version.beginning, 'Starting Chapter') }}
             </div>
         {% endif %}
 

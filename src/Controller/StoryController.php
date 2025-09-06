@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\ModerationMessage;
 use App\Entity\Story;
+use App\Entity\StoryGroup;
 use App\Enum\StoryStatus;
 use App\Form\ModerationMessageType;
-use App\Form\NewStoryType;
+use App\Form\NewStoryFormType;
 use App\Repository\ModerationMessageRepository;
 use App\Repository\ReadingHistoryRepository;
+use App\Repository\StoryGroupRepository;
 use App\Repository\StoryRepository;
 use App\Security\Voter\StoryVoter;
 use App\Service\ReadingStatWidget;
@@ -32,27 +34,33 @@ final class StoryController extends AbstractController
     #[Route('/new', name: 'app_story_new', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $story = new Story();
-        $form = $this->createForm(NewStoryType::class, $story);
+        $form = $this->createForm(NewStoryFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Initialize story values
-            $story
-                ->setOwner($this->getUserProfile())
-                ->setStoryStatus(StoryStatus::DRAFT)
-            ;
+            /** @var StoryGroup $storyGroup */
+            $storyGroup = $form->get('storyGroup')->getData();
+            /** @var Story $version */
+            $version = $form->get('version')->getData();
 
-            $entityManager->persist($story);
+            // Set owner on the group
+            $storyGroup->setOwner($this->getUserProfile());
+
+            // Set version, status, and associate the story with its group
+            $version->setVersion(1);
+            $version->setStoryStatus(StoryStatus::DRAFT);
+            $version->setStoryGroup($storyGroup);
+
+            $entityManager->persist($storyGroup);
+            $entityManager->persist($version);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
+            return $this->redirectToRoute('app_story_show', ['id' => $version->getId()]);
         }
 
         return $this->render('story/new.html.twig', [
             'form' => $form,
             'edit' => false,
-            'story' => $story,
         ]);
     }
 
@@ -62,15 +70,15 @@ final class StoryController extends AbstractController
         methods: ['GET'],
     )]
     public function index(
-        StoryRepository $storyRepository,
+        StoryGroupRepository $storyGroupRepository,
         StoryTemplateManager $storyTemplateManager,
         #[MapQueryParameter]?string $q = null,
-        #[MapQueryParameter]string $sort = 'updatedAt',
+        #[MapQueryParameter]string $sort = 'title',
     ): Response {
-        $stories = $storyRepository->findByFilters($this->getUserProfile(), $q, $sort);
+        $storyGroups = $storyGroupRepository->findByOwner($this->getUserProfile(), $q, $sort);
 
         return $this->render('story/index.html.twig', [
-            'stories' => $stories,
+            'storyGroups' => $storyGroups,
             'searchTerm' => $q,
             'sortBy' => $sort,
             'templateManager' => $storyTemplateManager,
@@ -90,7 +98,7 @@ final class StoryController extends AbstractController
 
         $moderationMessages = [];
         // Only show moderation messages to the owner, or to a moderator/admin
-        if ($this->isGranted('ROLE_MODERATOR') || $story->getOwner()->getAccount() === $security->getUser()) {
+        if ($this->isGranted('ROLE_MODERATOR') || $story->getStoryGroup()->getOwner()->getAccount() === $security->getUser()) {
             $moderationMessages = $moderationMessageRepository->findBy(['story' => $story], ['createdAt' => 'DESC']);
         }
 
@@ -98,7 +106,7 @@ final class StoryController extends AbstractController
             'form' => $form,
             'story' => $story,
             'chapters' => $chapters,
-            'template' => $templateManager->getTemplate($story->getTemplate()),
+            'template' => $templateManager->getTemplate($story->getStoryGroup()->getTemplate()),
             'moderationMessages' => $moderationMessages,
         ]);
     }
@@ -110,7 +118,12 @@ final class StoryController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        $form = $this->createForm(NewStoryType::class, $story);
+        $data = [
+            'storyGroup' => $story->getStoryGroup(),
+            'version' => $story,
+        ];
+
+        $form = $this->createForm(NewStoryFormType::class, $data);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -167,7 +180,7 @@ final class StoryController extends AbstractController
         return $this->render('story/read.html.twig', [
             'story' => $story,
             'chapters' => $chapters,
-            'template' => $templateManager->getTemplate($story->getTemplate()),
+            'template' => $templateManager->getTemplate($story->getStoryGroup()->getTemplate()),
             'lastRead' => $lastRead,
         ]);
     }
@@ -221,7 +234,7 @@ final class StoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $moderationMessage->setStory($story);
             $moderationMessage->setSender($security->getUser());
-            $moderationMessage->setReceiver($story->getOwner()->getAccount());
+            $moderationMessage->setReceiver($story->getStoryGroup()->getOwner()->getAccount());
             $entityManager->persist($moderationMessage);
         }
 

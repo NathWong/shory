@@ -24,20 +24,8 @@ class Story implements CreatedUpdatedInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $summary = null;
-
-    #[ORM\ManyToOne(inversedBy: 'stories')]
-    private ?UserProfile $owner = null;
-
-    /**
-     * @var Collection<int, UserProfile>
-     */
-    #[ORM\ManyToMany(targetEntity: UserProfile::class, inversedBy: 'Contributions')]
-    private Collection $contributors;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -63,27 +51,21 @@ class Story implements CreatedUpdatedInterface
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Chapter $beginning = null;
 
+    #[ORM\ManyToOne(inversedBy: 'stories')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?StoryGroup $storyGroup = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $publishedAt = null;
+
     public function __construct()
     {
-        $this->contributors = new ArrayCollection();
         $this->chapters = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): static
-    {
-        $this->title = $title;
-
-        return $this;
     }
 
     public function getSummary(): ?string
@@ -94,42 +76,6 @@ class Story implements CreatedUpdatedInterface
     public function setSummary(?string $summary): static
     {
         $this->summary = $summary;
-
-        return $this;
-    }
-
-    public function getOwner(): ?UserProfile
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?UserProfile $owner): static
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, UserProfile>
-     */
-    public function getContributors(): Collection
-    {
-        return $this->contributors;
-    }
-
-    public function addContributor(UserProfile $contributor): static
-    {
-        if (!$this->contributors->contains($contributor)) {
-            $this->contributors->add($contributor);
-        }
-
-        return $this;
-    }
-
-    public function removeContributor(UserProfile $contributor): static
-    {
-        $this->contributors->removeElement($contributor);
 
         return $this;
     }
@@ -232,6 +178,30 @@ class Story implements CreatedUpdatedInterface
     public function setBeginning(?Chapter $beginning): static
     {
         $this->beginning = $beginning;
+
+        return $this;
+    }
+
+    public function getStoryGroup(): ?StoryGroup
+    {
+        return $this->storyGroup;
+    }
+
+    public function setStoryGroup(?StoryGroup $storyGroup): static
+    {
+        $this->storyGroup = $storyGroup;
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeImmutable
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

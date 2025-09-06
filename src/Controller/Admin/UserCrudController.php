@@ -26,9 +26,9 @@ class UserCrudController extends AbstractCrudController
                 ])
                 ->allowMultipleChoices()
                 ->renderAsBadges([
-                    'ROLE_USER' => 'text-bg-secondary',
-                    'ROLE_MODERATOR' => 'text-bg-info',
-                    'ROLE_ADMIN' => 'text-bg-danger',
+                    'ROLE_USER' => 'secondary',
+                    'ROLE_MODERATOR' => 'info',
+                    'ROLE_ADMIN' => 'danger',
                 ]),
             EA\BooleanField::new('isVerified'),
             EA\AssociationField::new('userProfile'),
