@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\JsonType;
 
 class ChapterLinkResponseType extends JsonType
 {
-    public const NAME = 'chapter_link_response';
+    public const string NAME = 'chapter_link_response';
 
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): ?ChapterLinkResponse
     {

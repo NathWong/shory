@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Contract\CreatedUpdatedInterface;
+use App\Contract\StoriableInterface;
 use App\Repository\ChapterRepository;
 use App\Trait\CreatedUpdatedTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChapterRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Chapter implements CreatedUpdatedInterface
+class Chapter implements CreatedUpdatedInterface, StoriableInterface
 {
     use CreatedUpdatedTrait;
 
@@ -193,5 +194,13 @@ class Chapter implements CreatedUpdatedInterface
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setAsBeginningIfFirst(): void
+    {
+        if ($this->getStory() && !$this->getStory()->getBeginning()) {
+            $this->getStory()->setBeginning($this);
+        }
     }
 }

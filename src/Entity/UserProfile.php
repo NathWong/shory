@@ -46,10 +46,17 @@ class UserProfile
     #[ORM\ManyToMany(targetEntity: Story::class, mappedBy: 'Contributors')]
     private Collection $contributions;
 
+    /**
+     * @var Collection<int, ReadingHistory>
+     */
+    #[ORM\OneToMany(targetEntity: ReadingHistory::class, mappedBy: 'userProfile', orphanRemoval: true)]
+    private Collection $readingHistories;
+
     public function __construct()
     {
         $this->stories = new ArrayCollection();
         $this->contributions = new ArrayCollection();
+        $this->readingHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,6 +188,41 @@ class UserProfile
     {
         if ($this->contributions->removeElement($contribution)) {
             $contribution->removeContributor($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getPenName() ?: $this->getFirstName() ?: '';
+    }
+
+    /**
+     * @return Collection<int, ReadingHistory>
+     */
+    public function getReadingHistories(): Collection
+    {
+        return $this->readingHistories;
+    }
+
+    public function addReadingHistory(ReadingHistory $readingHistory): static
+    {
+        if (!$this->readingHistories->contains($readingHistory)) {
+            $this->readingHistories->add($readingHistory);
+            $readingHistory->setUserProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReadingHistory(ReadingHistory $readingHistory): static
+    {
+        if ($this->readingHistories->removeElement($readingHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($readingHistory->getUserProfile() === $this) {
+                $readingHistory->setUserProfile(null);
+            }
         }
 
         return $this;

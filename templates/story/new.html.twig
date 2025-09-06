@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block target_center_turbo %}
+    <div class="my-5 col-lg-8 mx-auto">
+
+        <h1 class="mb-4">{% if edit %}Edit Story{% else %}Start a New Story{% endif %}</h1>
+
+        {% if edit %}
+            {% set action = path('app_story_edit', {'id': story.id}) %}
+        {% else %}
+            {% set action = path('app_story_new') %}
+        {% endif %}
+        {{ form_start(form, {'action': action}) }}
+
+        <div class="form-floating mb-3">
+            {{ form_widget(form.title) }}
+            {{ form_label(form.title) }}
+        </div>
+
+        <div class="form-floating mb-4">
+            {{ form_widget(form.genre) }}
+            {{ form_label(form.genre) }}
+        </div>
+
+        <div class="form-floating mb-4">
+            {{ form_widget(form.summary) }}
+            {{ form_label(form.summary) }}
+        </div>
+
+        <div class="form-floating mb-4">
+            {{ form_widget(form.template) }}
+            {{ form_label(form.template) }}
+        </div>
+
+        {% if form.beginning is defined %}
+            <div class="form-floating mb-4">
+                {{ form_widget(form.beginning) }}
+                {{ form_label(form.beginning, 'Starting Chapter') }}
+            </div>
+        {% endif %}
+
+        <div class="d-flex justify-content-end mt-4">
+            <a href="{{ path('app_home') }}" class="btn btn-secondary me-3">Cancel</a>
+            <button class="btn btn-primary btn-lg">{{ button_label|default('Save and Continue') }}</button>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}

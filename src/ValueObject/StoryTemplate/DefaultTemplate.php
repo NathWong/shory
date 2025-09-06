@@ -4,22 +4,21 @@ namespace App\ValueObject\StoryTemplate;
 
 use App\Contract\StoryTemplateInterface;
 
-class DefaultTemplate implements StoryTemplateInterface
+final class DefaultTemplate implements StoryTemplateInterface
 {
-
     public function getName(): string
     {
-        return 'light (default)';
+        return 'Default';
+    }
+
+    public function getDescription(): string
+    {
+        return 'A simple and clean default theme.';
     }
 
     public function getIdentifier(): string
     {
         return 'default';
-    }
-
-    public function getDescription(): string
-    {
-        return 'A light theme by default';
     }
 
     public function getCssClass(): string

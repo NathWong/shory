@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit UserProfile{% endblock %}
-
-{% block body %}
+{% block target_center_turbo %}
     <h1>Edit UserProfile</h1>
 
-    {{ include('profile/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('profile/_form.html.twig', {
+        'button_label': 'Update',
+        'action_path': 'app_profile_edit',
+    }) }}
 
     <a href="{{ path('app_profile_index') }}">back to list</a>
 

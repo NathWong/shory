@@ -1,0 +1,7 @@
+<div class="input-group mb-2" {{ stimulus_target('form_collection', 'collectionElement') }}>
+    {{ form_widget(ruleForm.keyword, {'attr': {'class': 'form-control', 'placeholder': 'Keyword...'}}) }}
+    {{ form_widget(ruleForm.destination, {'attr': {'class': 'form-select'}}) }}
+    <button type="button" class="btn btn-outline-danger" {{ stimulus_action('form_collection', 'remove') }}>
+        <i class="bi bi-trash"></i>
+    </button>
+</div>

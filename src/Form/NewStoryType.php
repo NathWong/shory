@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Chapter;
 use App\Entity\Story;
 use App\Entity\UserProfile;
 use App\Enum\StoryGenreEnum;
@@ -52,12 +53,34 @@ class NewStoryType extends AbstractType
                 'attr' => ['class' => 'form-select'],
             ])
         ;
+
+        // Add startingChapter field only if editing an existing story with chapters
+        if ($options['story'] instanceof Story && !$options['story']->getChapters()->isEmpty()) {
+            $builder->add('beginning', EntityType::class, [
+                'class' => Chapter::class,
+                'choice_label' => 'title',
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.story = :story')
+                        ->setParameter('story', $options['story'])
+                        ->orderBy('c.title', 'ASC');
+                },
+                'placeholder' => 'Choose a starting chapter',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-select',
+                ],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Story::class,
+            'story' => null, // Add a default null value for the story option
         ]);
+
+        $resolver->setAllowedTypes('story', [Story::class, 'null']);
     }
 }

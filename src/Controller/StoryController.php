@@ -2,19 +2,26 @@
 
 namespace App\Controller;
 
+use App\Entity\ModerationMessage;
 use App\Entity\Story;
 use App\Enum\StoryStatus;
+use App\Form\ModerationMessageType;
 use App\Form\NewStoryType;
+use App\Repository\ModerationMessageRepository;
+use App\Repository\ReadingHistoryRepository;
 use App\Repository\StoryRepository;
+use App\Security\Voter\StoryVoter;
+use App\Service\ReadingStatWidget;
+use App\Service\StoryTemplateManager;
 use App\Trait\ProfiledUserTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\UX\Turbo\TurboBundle;
 
 #[Route('/story')]
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
@@ -22,7 +29,7 @@ final class StoryController extends AbstractController
 {
     use ProfiledUserTrait;
 
-    #[Route('/new', name: 'app_story_new', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/new', name: 'app_story_new', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $story = new Story();
@@ -33,7 +40,7 @@ final class StoryController extends AbstractController
             // Initialize story values
             $story
                 ->setOwner($this->getUserProfile())
-                ->setStoryStatus(StoryStatus::DRAFT->value)
+                ->setStoryStatus(StoryStatus::DRAFT)
             ;
 
             $entityManager->persist($story);
@@ -42,7 +49,7 @@ final class StoryController extends AbstractController
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }
 
-        return $this->render('story/new.stream.html.twig', [
+        return $this->render('story/new.html.twig', [
             'form' => $form,
             'edit' => false,
             'story' => $story,
@@ -53,33 +60,51 @@ final class StoryController extends AbstractController
         '/index',
         name: 'app_story_index',
         methods: ['GET'],
-        format: TurboBundle::STREAM_FORMAT
     )]
     public function index(
         StoryRepository $storyRepository,
-        Request $request,
+        StoryTemplateManager $storyTemplateManager,
         #[MapQueryParameter]?string $q = null,
         #[MapQueryParameter]string $sort = 'updatedAt',
     ): Response {
         $stories = $storyRepository->findByFilters($this->getUserProfile(), $q, $sort);
 
-        return $this->render('story/index.stream.html.twig', [
+        return $this->render('story/index.html.twig', [
             'stories' => $stories,
             'searchTerm' => $q,
             'sortBy' => $sort,
+            'templateManager' => $storyTemplateManager,
             ]);
     }
 
     #[Route('/show/{id}', name: 'app_story_show', methods: ['GET'])]
-    public function show(Request $request, Story $story): Response
-    {
-        $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+    #[IsGranted(StoryVoter::VIEW, subject: 'story')]
+    public function show(
+        Story $story,
+        StoryTemplateManager $templateManager,
+        ModerationMessageRepository $moderationMessageRepository,
+        Security $security
+    ): Response {
         $chapters = $story->getChapters();
+        $form = $this->createFormBuilder()->getForm();
 
-        return $this->render('story/show.stream.html.twig', ['story' => $story, 'chapters' => $chapters]);
+        $moderationMessages = [];
+        // Only show moderation messages to the owner, or to a moderator/admin
+        if ($this->isGranted('ROLE_MODERATOR') || $story->getOwner()->getAccount() === $security->getUser()) {
+            $moderationMessages = $moderationMessageRepository->findBy(['story' => $story], ['createdAt' => 'DESC']);
+        }
+
+        return $this->render('story/show.html.twig', [
+            'form' => $form,
+            'story' => $story,
+            'chapters' => $chapters,
+            'template' => $templateManager->getTemplate($story->getTemplate()),
+            'moderationMessages' => $moderationMessages,
+        ]);
     }
 
-    #[Route('/edit/{id}', name: 'app_story_edit', methods: ['GET', 'POST'], format: TurboBundle::STREAM_FORMAT)]
+    #[Route('/edit/{id}', name: 'app_story_edit', methods: ['GET', 'POST'])]
+    #[IsGranted(StoryVoter::EDIT, subject: 'story')]
     public function edit(
         Story $story,
         Request $request,
@@ -89,16 +114,131 @@ final class StoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $entityManager->persist($story);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }
 
-        return $this->render('story/new.stream.html.twig', [
+        return $this->render('story/new.html.twig', [
+            'story' => $story,
             'form' => $form,
             'edit' => true,
         ]);
+    }
+
+    #[Route('/browse', name: 'app_story_browse', methods: ['GET'])]
+    public function browse(
+        StoryRepository $storyRepository,
+        StoryTemplateManager $storyTemplateManager,
+        ReadingStatWidget $statWidget,
+        #[MapQueryParameter]?string $q = null,
+        #[MapQueryParameter]string $sort = 'updatedAt',
+    ): Response {
+        $stories = $storyRepository->findByStoryStatus(StoryStatus::PUBLISHED, $q, $sort);
+
+        $readingProgress = $statWidget->getReadingProgresses($this->getUserProfile(), $stories);
+
+        return $this->render('story/browse.html.twig', [
+            'stories' => $stories,
+            'searchTerm' => $q,
+            'sortBy' => $sort,
+            'templateManager' => $storyTemplateManager,
+            'readingProgress' => $readingProgress,
+        ]);
+    }
+
+    #[Route('/read/{id}', name: 'app_story_read', methods: ['GET'])]
+    #[IsGranted(StoryVoter::READ, subject: 'story')]
+    public function read(
+        Story $story,
+        StoryTemplateManager $templateManager,
+        ReadingHistoryRepository $readingHistoryRepository,
+    ): Response {
+        $chapters = $story->getChapters();
+
+        $lastRead = $readingHistoryRepository->findOneBy(
+            [
+                'userProfile' => $this->getUserProfile(),
+                'story' => $story,
+            ],
+            ['createdAt' => 'DESC'],
+        );
+
+        return $this->render('story/read.html.twig', [
+            'story' => $story,
+            'chapters' => $chapters,
+            'template' => $templateManager->getTemplate($story->getTemplate()),
+            'lastRead' => $lastRead,
+        ]);
+    }
+
+    #[Route('/request-publish/{id}', name: 'app_story_request_publish', methods: ['POST'])]
+    #[IsGranted(StoryVoter::EDIT, subject: 'story')]
+    public function requestPublish(Story $story, EntityManagerInterface $entityManager): Response
+    {
+        $story->setStoryStatus(StoryStatus::WAITING_VALIDATION);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Your story has been submitted for validation.');
+
+        return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
+    }
+
+    #[Route('/moderation', name: 'app_story_moderation_index', methods: ['GET'])]
+    #[IsGranted('ROLE_MODERATOR')]
+    public function moderationIndex(
+        StoryRepository $storyRepository,
+        StoryTemplateManager $storyTemplateManager,
+        #[MapQueryParameter]?string $q = null,
+        #[MapQueryParameter]string $sort = 'updatedAt',
+    ): Response {
+        $stories = $storyRepository->findByStoryStatus(StoryStatus::WAITING_VALIDATION, $q, $sort);
+        $form = $this->createFormBuilder()->getForm();
+
+        return $this->render('story/moderation_list.html.twig', [
+            'form' => $form,
+            'stories' => $stories,
+            'searchTerm' => $q,
+            'sortBy' => $sort,
+            'templateManager' => $storyTemplateManager,
+        ]);
+    }
+
+    #[Route('/validate-publish/{id}/{decision}', name: 'app_story_validate_publish', methods: ['POST'])]
+    #[IsGranted('ROLE_MODERATOR')]
+    #[IsGranted(StoryVoter::MODERATE, subject: 'story')]
+    public function validatePublish(
+        Story   $story,
+        string  $decision,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Security $security,
+    ): Response {
+        $moderationMessage = new ModerationMessage();
+        $form = $this->createForm(ModerationMessageType::class, $moderationMessage);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $moderationMessage->setStory($story);
+            $moderationMessage->setSender($security->getUser());
+            $moderationMessage->setReceiver($story->getOwner()->getAccount());
+            $entityManager->persist($moderationMessage);
+        }
+
+        $status = match ($decision) {
+            'validated' => StoryStatus::PUBLISHED,
+            'rejected' => StoryStatus::DRAFT,
+            default => StoryStatus::WAITING_VALIDATION,
+        };
+        $story->setStoryStatus($status);
+        $entityManager->flush();
+
+        if ('validated' === $decision) {
+            $this->addFlash('success', sprintf('Story \'%s\' has been successfully published.', $story->getTitle()));
+        } elseif ('rejected' === $decision) {
+            $this->addFlash('warning', sprintf('Story \'%s\' has been rejected and set back to draft.', $story->getTitle()));
+        }
+
+        return $this->redirectToRoute('app_story_moderation_index');
     }
 }

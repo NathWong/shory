@@ -71,3 +71,11 @@
     color: #6c757d;
     font-style: italic;
 }
+
+.badge-beginning {
+    background-color: #fff;
+    border: 1px solid #8B0000;
+    color: #8B0000;
+    font-style: italic;
+    font-size: 0.8em;
+}

@@ -9,6 +9,8 @@ interface ChapterLinkTypeInterface
 {
     public static function getName(): string;
 
+    public function getIdentifier(): string;
+
     public function show(): string;
 
     public function edit(): string;

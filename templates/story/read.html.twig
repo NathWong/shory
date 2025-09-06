@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% import 'helpers/story_helper.html.twig' as storyHelper %}
+
+{% block target_center_turbo %}
+    <div class="text-center mb-4">
+        <a href="{{ path('app_story_browse') }}"
+           class="btn btn-outline-secondary"
+           data-turbo-frame="target-center"
+           data-turbo-action="advance"
+        >
+            <i class="bi bi-arrow-left-circle me-2"></i>
+            Back to browse stories
+        </a>
+    </div>
+
+    {# Apply the story's template to the whole container #}
+    <div class="story-render-container {{ template.getCssClass() }} p-5 d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh; position: relative;">
+
+        {# Genre badge in the top-left corner #}
+        <div style="position: absolute; top: 1.5rem; left: 1.5rem;">
+            {{ storyHelper.genre_tag(story) }}
+        </div>
+
+        {# Main content centered #}
+        <div class="text-center">
+            <h1 class="display-3 fw-bold mb-3">{{ story.title }}</h1>
+            <p class="lead mb-4">By {{ story.owner.penName ? story.owner.penName : story.owner.firstName }}</p>
+            <p class="fst-italic col-lg-8 mx-auto">{{ story.summary }}</p>
+        </div>
+
+        {# "Start the Adventure" or "Resume Reading" button #}
+        <div class="mt-5">
+            {% if story.beginning %}
+                {% if lastRead %}
+                    <a href="{{ path('app_chapter_read', {'id': lastRead.chapterLink.target.id}) }}"
+                       class="btn btn-primary btn-lg"
+                       data-turbo-frame="target-center"
+                    >
+                        <i class="bi bi-play-circle me-2"></i>
+                        Resume Reading
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_chapter_read', {'id': story.beginning.id}) }}"
+                       class="btn btn-primary btn-lg"
+                       data-turbo-frame="target-center"
+                    >
+                        <i class="bi bi-book-half me-2"></i>
+                        Start the Adventure
+                    </a>
+                {% endif %}
+            {% else %}
+                <p class="text-muted mt-4">This story doesn't have a starting chapter yet. Come back soon!</p>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}

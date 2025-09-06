@@ -16,4 +16,16 @@ enum StoryGenreEnum: string
     case HistoricalFiction = 'Historical Fiction';
     case Comedy = 'Comedy';
     case Drama = 'Drama';
+
+    public function getColorClass(): string
+    {
+        return match($this) {
+            self::Horror, self::Thriller => 'text-bg-danger',
+            self::Fantasy, self::Adventure => 'text-bg-success',
+            self::ScienceFiction, self::Mystery => 'text-bg-primary',
+            self::Romance, self::Comedy => 'text-bg-warning',
+            self::HistoricalFiction, self::Drama => 'text-bg-info',
+            default => 'text-bg-secondary',
+        };
+    }
 }

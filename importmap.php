@@ -26,17 +26,17 @@ return [
         'version' => '8.0.13',
     ],
     'bootstrap' => [
-        'version' => '5.3.7',
+        'version' => '5.3.8',
     ],
     '@popperjs/core' => [
         'version' => '2.11.8',
     ],
     'bootstrap/dist/css/bootstrap.min.css' => [
-        'version' => '5.3.7',
+        'version' => '5.3.8',
         'type' => 'css',
     ],
     '@fortawesome/fontawesome-free/css/all.min.css' => [
-        'version' => '7.0.0',
+        'version' => '7.0.1',
         'type' => 'css',
     ],
     'marked' => [
@@ -48,6 +48,5 @@ return [
     ],
     'dompurify' => [
         'version' => '3.2.6',
-        'type' => 'js',
     ],
 ];

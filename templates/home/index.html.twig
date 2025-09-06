@@ -8,7 +8,7 @@
 
         {# --- Welcome message --- #}
         <div class="mb-5">
-            {% if app.user %}
+            {% if app.user and app.user.userProfile %}
                 <h1 class="display-5">Welcome, {{ app.user.userProfile.firstName }} !</h1>
                 <p class="lead text-muted">What do you want to do today?</p>
             {% else %}
@@ -25,7 +25,8 @@
                     '<i class="bi bi-book me-2"></i>My stories',
                     'View, edit, and manage all the stories you\'ve created.',
                     path('app_story_index'),
-                    'See all'
+                    'See all',
+                    'advance'
                 ) }}
 
                 {{ helper.widget_card(
@@ -34,6 +35,24 @@
                     path('app_story_new'),
                     'Start a new story'
                 ) }}
+
+                {{ helper.widget_card(
+                    '<i class="bi bi-binoculars me-2"></i>Browse Stories',
+                    'Read stories published by other users.',
+                    path('app_story_browse'),
+                    'Browse stories',
+                    'advance'
+                ) }}
+
+                {% if is_granted('ROLE_MODERATOR') %}
+                    {{ helper.widget_card(
+                        '<i class="bi bi-hourglass-split me-2"></i>Stories to Validate',
+                        'Review and approve stories submitted by users.',
+                        path('app_story_moderation_index'),
+                        'Review stories',
+                        'advance'
+                    ) }}
+                {% endif %}
 
             </div>
         {% endif %}

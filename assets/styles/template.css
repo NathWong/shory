@@ -1,3 +1,8 @@
+.story-render-container {
+    padding: 2rem; /* Add breathing room around the content */
+    border-radius: 0.5rem; /* Soften the corners */
+}
+
 .story-render-container.template-default {
     background-color: #FFFFFF;
     color: #212529;
@@ -8,4 +13,92 @@
     background-color: #212529;
     color: #dee2e6;
     font-family: 'Times New Roman', serif;
+}
+
+/* --- Parchment --- */
+.story-render-container.template-parchment {
+    background-color: #f5e8c8; /* Parchment paper color */
+    color: #4a2c2a; /* Dark brown ink */
+    font-family: 'Garamond', 'Georgia', serif;
+}
+.template-parchment h1, .template-parchment h2, .template-parchment h3 {
+    font-family: 'Times New Roman', serif; /* More classic font for titles */
+}
+.template-parchment a {
+    color: #8B0000; /* Dark red for links */
+}
+
+/* --- Cyberpunk --- */
+.story-render-container.template-cyberpunk {
+    background-color: #0a041a; /* Very dark blue */
+    color: #00ff9c; /* Neon green */
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 3px rgba(0, 255, 156, 0.5);
+    border: 1px solid #00ff9c;
+}
+.template-cyberpunk h1, .template-cyberpunk h2, .template-cyberpunk h3 {
+    color: #ff00ff; /* Magenta for titles */
+    text-shadow: 0 0 5px rgba(255, 0, 255, 0.7);
+}
+.template-cyberpunk a {
+    color: #00ffff; /* Cyan for links */
+}
+
+/* --- Noir --- */
+.story-render-container.template-noir {
+    background-color: #f8f8f2; /* Off-white paper */
+    color: #222222;
+    font-family: 'Courier New', monospace;
+}
+.template-noir h1, .template-noir h2, .template-noir h3 {
+    font-weight: bold;
+}
+.template-noir a {
+    color: #a90000; /* Dark, blood-red for accents */
+    text-decoration: underline;
+}
+
+/* --- Steampunk --- */
+.story-render-container.template-steampunk {
+    background-color: #6B4F35; /* Wood brown */
+    color: #e0d6c4; /* Light cream text */
+    font-family: 'Georgia', serif;
+    border: 3px solid #4a3728;
+}
+.template-steampunk h1, .template-steampunk h2, .template-steampunk h3 {
+    color: #c8b59a; /* Brass color */
+    font-family: 'Times New Roman', serif;
+    border-bottom: 1px solid #8c785d;
+}
+.template-steampunk a {
+    color: #c8b59a;
+}
+
+/* --- Sylvan --- */
+.story-render-container.template-sylvan {
+    background-color: #2a4d3e; /* Forest green */
+    color: #f0f5e9; /* Off-white text */
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+.template-sylvan h1, .template-sylvan h2, .template-sylvan h3 {
+    color: #d4e0c3; /* Lighter green for titles */
+}
+.template-sylvan a {
+    color: #d4e0c3;
+    text-decoration: underline;
+}
+
+/* --- Crimson --- */
+.story-render-container.template-crimson {
+    background-color: #121212; /* Deep black */
+    color: #e0e0e0; /* Light gray text */
+    font-family: 'Georgia', serif;
+    border: 1px solid #dc143c;
+}
+.template-crimson h1, .template-crimson h2, .template-crimson h3 {
+    color: #dc143c; /* Crimson red for titles */
+}
+.template-crimson a {
+    color: #dc143c; /* Crimson red for links */
+    font-weight: bold;
 }

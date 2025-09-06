@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Story;
 use App\Entity\UserProfile;
+use App\Enum\StoryStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,28 +38,17 @@ class StoryRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-//    /**
-//     * @return Story[] Returns an array of Story objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findByStoryStatus(StoryStatus $WAITING_VALIDATION, ?string $q, string $sort): array
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->andWhere('s.storyStatus = :status')
+            ->setParameter('status', $WAITING_VALIDATION->value);
+        if ($q) {
+            $qb->andWhere('s.title LIKE :searchTerm')
+                ->setParameter('searchTerm', '%' . $q . '%');
+        }
+        $qb->orderBy('s.' . $sort, 'DESC');
 
-//    public function findOneBySomeField($value): ?Story
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $qb->getQuery()->getResult();
+    }
 }

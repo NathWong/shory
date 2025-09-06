@@ -3,16 +3,9 @@
 namespace App\ValueObject\ResponseType;
 
 use App\Contract\ChapterLinkTypeInterface;
-use App\Entity\Chapter;
 
 readonly class ClickableLinks implements ChapterLinkTypeInterface
 {
-    public function __construct(
-        private Chapter $source,
-    )
-    {
-    }
-
     public function show(): string
     {
         return 'chapterLink/_clickable_link.html.twig';
@@ -26,5 +19,10 @@ readonly class ClickableLinks implements ChapterLinkTypeInterface
     public static function getName(): string
     {
         return 'Direct links';
+    }
+
+    public function getIdentifier(): string
+    {
+        return 'clickable_links';
     }
 }
