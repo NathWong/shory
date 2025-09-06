@@ -8,8 +8,10 @@ use App\Enum\StoryStatus;
 use App\Form\ModerationMessageType;
 use App\Form\NewStoryType;
 use App\Repository\ModerationMessageRepository;
+use App\Repository\ReadingHistoryRepository;
 use App\Repository\StoryRepository;
 use App\Security\Voter\StoryVoter;
+use App\Service\ReadingStatWidget;
 use App\Service\StoryTemplateManager;
 use App\Trait\ProfiledUserTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,7 +40,7 @@ final class StoryController extends AbstractController
             // Initialize story values
             $story
                 ->setOwner($this->getUserProfile())
-                ->setStoryStatus(StoryStatus::DRAFT->value)
+                ->setStoryStatus(StoryStatus::DRAFT)
             ;
 
             $entityManager->persist($story);
@@ -128,16 +130,20 @@ final class StoryController extends AbstractController
     public function browse(
         StoryRepository $storyRepository,
         StoryTemplateManager $storyTemplateManager,
+        ReadingStatWidget $statWidget,
         #[MapQueryParameter]?string $q = null,
         #[MapQueryParameter]string $sort = 'updatedAt',
     ): Response {
         $stories = $storyRepository->findByStoryStatus(StoryStatus::PUBLISHED, $q, $sort);
+
+        $readingProgress = $statWidget->getReadingProgresses($this->getUserProfile(), $stories);
 
         return $this->render('story/browse.html.twig', [
             'stories' => $stories,
             'searchTerm' => $q,
             'sortBy' => $sort,
             'templateManager' => $storyTemplateManager,
+            'readingProgress' => $readingProgress,
         ]);
     }
 
@@ -146,13 +152,23 @@ final class StoryController extends AbstractController
     public function read(
         Story $story,
         StoryTemplateManager $templateManager,
+        ReadingHistoryRepository $readingHistoryRepository,
     ): Response {
         $chapters = $story->getChapters();
+
+        $lastRead = $readingHistoryRepository->findOneBy(
+            [
+                'userProfile' => $this->getUserProfile(),
+                'story' => $story,
+            ],
+            ['createdAt' => 'DESC'],
+        );
 
         return $this->render('story/read.html.twig', [
             'story' => $story,
             'chapters' => $chapters,
             'template' => $templateManager->getTemplate($story->getTemplate()),
+            'lastRead' => $lastRead,
         ]);
     }
 

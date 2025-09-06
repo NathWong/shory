@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use App\Contract\StoriableInterface;
 use App\Doctrine\Type\ChapterLinkResponseType;
 use App\Repository\ChapterLinkRepository;
 use App\ValueObject\ChapterLinkResponse;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChapterLinkRepository::class)]
-class ChapterLink
+class ChapterLink implements StoriableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -64,5 +65,10 @@ class ChapterLink
         $this->responses = $responses;
 
         return $this;
+    }
+
+    public function getStory(): ?Story
+    {
+        return $this->getSource()?->getStory();
     }
 }

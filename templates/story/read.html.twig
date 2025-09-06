@@ -28,16 +28,26 @@
             <p class="fst-italic col-lg-8 mx-auto">{{ story.summary }}</p>
         </div>
 
-        {# "Start the Adventure" button #}
+        {# "Start the Adventure" or "Resume Reading" button #}
         <div class="mt-5">
             {% if story.beginning %}
-                <a href="{{ path('app_chapter_read', {'id': story.beginning.id}) }}"
-                   class="btn btn-primary btn-lg"
-                   data-turbo-frame="target-center"
-                >
-                    <i class="bi bi-book-half me-2"></i>
-                    Start the Adventure
-                </a>
+                {% if lastRead %}
+                    <a href="{{ path('app_chapter_read', {'id': lastRead.chapterLink.target.id}) }}"
+                       class="btn btn-primary btn-lg"
+                       data-turbo-frame="target-center"
+                    >
+                        <i class="bi bi-play-circle me-2"></i>
+                        Resume Reading
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_chapter_read', {'id': story.beginning.id}) }}"
+                       class="btn btn-primary btn-lg"
+                       data-turbo-frame="target-center"
+                    >
+                        <i class="bi bi-book-half me-2"></i>
+                        Start the Adventure
+                    </a>
+                {% endif %}
             {% else %}
                 <p class="text-muted mt-4">This story doesn't have a starting chapter yet. Come back soon!</p>
             {% endif %}

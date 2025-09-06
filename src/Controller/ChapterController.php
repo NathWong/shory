@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Chapter;
 use App\Entity\Story;
 use App\Form\ChapterType;
+use App\Repository\ReadingHistoryRepository;
 use App\Security\Voter\ChapterVoter;
 use App\Security\Voter\StoryVoter;
 use App\Service\ChapterLinkTypeManager;
 use App\Service\StoryTemplateManager;
+use App\Trait\ProfiledUserTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,6 +24,8 @@ use function Symfony\Component\String\u;
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
 final class ChapterController extends AbstractController
 {
+    use ProfiledUserTrait;
+
     #[Route('/new/{story_id}', name: 'app_chapter_new')]
     #[IsGranted(StoryVoter::EDIT, subject: 'story')]
     public function create(
@@ -102,24 +106,28 @@ final class ChapterController extends AbstractController
             ->lower()
             ->trim()
             ->toString();
-
-        if (empty($userInput)) {
-            return $this->redirectToRoute('app_chapter_show', ['id' => $chapter->getId()]);
-        }
-
-        foreach ($chapter->getChapterLinks() as $link) {
-            if ($link->getResponses()->isValid($userInput)) {
-                return $this->redirectToRoute('app_chapter_show', ['id' => $link->getTarget()->getId()]);
-            }
-        }
-
-        $this->addFlash('warning', sprintf('The command \'%s\' did not lead anywhere.', $userInput));
-        $target = match ($route) {
+        $redirection = match ($route) {
             'show' => 'app_chapter_show',
             default => 'app_chapter_read',
         };
 
-        return $this->redirectToRoute($target, ['id' => $chapter->getId()]);
+        if (empty($userInput)) {
+            return $this->redirectToRoute($redirection, ['id' => $chapter->getId()]);
+        }
+
+        foreach ($chapter->getChapterLinks() as $link) {
+            if ($link->getResponses()->isValid($userInput)) {
+                if ('app_chapter_read' === $redirection) {
+                    return $this->redirectToRoute('app_reading_navigate', ['id' => $link->getId()]);
+                } else {
+                    return $this->redirectToRoute($redirection, ['id' => $link->getTarget()->getId()]);
+                }
+            }
+        }
+
+        $this->addFlash('warning', sprintf('The command \'%s\' did not lead anywhere.', $userInput));
+
+        return $this->redirectToRoute($redirection, ['id' => $chapter->getId()]);
     }
 
     #[Route('/read/{id}', name: 'app_chapter_read', methods: ['GET'])]
@@ -128,14 +136,27 @@ final class ChapterController extends AbstractController
         Chapter $chapter,
         ChapterLinkTypeManager $manager,
         StoryTemplateManager $templateManager,
+        ReadingHistoryRepository $readingHistoryRepository,
     ): Response {
         $template = $templateManager->getTemplateClass($chapter->getStory()) ?? 'default';
+
+        $previousRead = $readingHistoryRepository->findOneBy(
+            [
+                'userProfile' => $this->getUserProfile(),
+                'story' => $chapter->getStory(),
+            ],
+            ['createdAt' => 'DESC']
+        );
+        if ($previousRead->getChapterLink()->getSource() === $chapter) {
+            $previousRead = null;// Prevent go back to self
+        }
 
         return $this->render('chapter/read.html.twig', [
             'chapter' => $chapter,
             'story' => $chapter->getStory(),
             'link_twig' => $manager->getLinkShowTwig($chapter),
             'template_class' => $template,
+            'previousRead' => $previousRead,
         ]);
     }
 }

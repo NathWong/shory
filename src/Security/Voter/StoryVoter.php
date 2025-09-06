@@ -2,7 +2,7 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Chapter;
+use App\Contract\StoriableInterface;
 use App\Entity\Story;
 use App\Entity\User;
 use App\Enum\StoryStatus;
@@ -24,7 +24,7 @@ class StoryVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::VIEW, self::READ, self::MODERATE])
-            && ($subject instanceof Story || $subject instanceof Chapter);
+            && ($subject instanceof Story || $subject instanceof StoriableInterface);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
