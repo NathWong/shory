@@ -2,6 +2,7 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Chapter;
 use App\Entity\Story;
 use App\Entity\User;
 use App\Enum\StoryStatus;
@@ -23,7 +24,7 @@ class StoryVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::VIEW, self::READ, self::MODERATE])
-            && $subject instanceof Story;
+            && ($subject instanceof Story || $subject instanceof Chapter);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -35,7 +36,7 @@ class StoryVoter extends Voter
         }
 
         /** @var Story $story */
-        $story = $subject;
+        $story = $subject instanceof Story ? $subject : $subject->getStory();
 
         $isOwner = $story->getOwner()->getAccount() === $user;
         $isModerator = $this->security->isGranted('ROLE_MODERATOR');
@@ -43,11 +44,11 @@ class StoryVoter extends Voter
         return match ($attribute) {
             self::EDIT => $isOwner,
 
-            self::VIEW => $isOwner || ($isModerator && $story->getStoryStatus() === StoryStatus::WAITING_VALIDATION->value) || $story->getStoryStatus() === StoryStatus::PUBLISHED->value,
+            self::VIEW => $isOwner || ($isModerator && $story->getStoryStatus() === StoryStatus::WAITING_VALIDATION) || $story->getStoryStatus() === StoryStatus::PUBLISHED,
 
-            self::READ => $isOwner || $story->getStoryStatus() === StoryStatus::PUBLISHED->value,
+            self::READ => $isOwner || $story->getStoryStatus() === StoryStatus::PUBLISHED,
 
-            self::MODERATE => $isModerator && $story->getStoryStatus() === StoryStatus::WAITING_VALIDATION->value,
+            self::MODERATE => $isModerator && $story->getStoryStatus() === StoryStatus::WAITING_VALIDATION,
 
             default => false,
         };

@@ -2,24 +2,24 @@
 
 namespace App\Controller;
 
+use App\Entity\ModerationMessage;
 use App\Entity\Story;
 use App\Enum\StoryStatus;
+use App\Form\ModerationMessageType;
 use App\Form\NewStoryType;
+use App\Repository\ModerationMessageRepository;
 use App\Repository\StoryRepository;
 use App\Security\Voter\StoryVoter;
 use App\Service\StoryTemplateManager;
 use App\Trait\ProfiledUserTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use App\Entity\ModerationMessage;
-use App\Form\ModerationMessageType;
-use Symfony\Component\Security\Core\Security;
-use App\Repository\ModerationMessageRepository;
 
 #[Route('/story')]
 #[IsGranted('IS_AUTHENTICATED_FULLY')]
@@ -84,6 +84,7 @@ final class StoryController extends AbstractController
         Security $security
     ): Response {
         $chapters = $story->getChapters();
+        $form = $this->createFormBuilder()->getForm();
 
         $moderationMessages = [];
         // Only show moderation messages to the owner, or to a moderator/admin
@@ -92,6 +93,7 @@ final class StoryController extends AbstractController
         }
 
         return $this->render('story/show.html.twig', [
+            'form' => $form,
             'story' => $story,
             'chapters' => $chapters,
             'template' => $templateManager->getTemplate($story->getTemplate()),
@@ -158,7 +160,7 @@ final class StoryController extends AbstractController
     #[IsGranted(StoryVoter::EDIT, subject: 'story')]
     public function requestPublish(Story $story, EntityManagerInterface $entityManager): Response
     {
-        $story->setStoryStatus(StoryStatus::WAITING_VALIDATION->value);
+        $story->setStoryStatus(StoryStatus::WAITING_VALIDATION);
         $entityManager->flush();
 
         $this->addFlash('success', 'Your story has been submitted for validation.');
@@ -175,8 +177,10 @@ final class StoryController extends AbstractController
         #[MapQueryParameter]string $sort = 'updatedAt',
     ): Response {
         $stories = $storyRepository->findByStoryStatus(StoryStatus::WAITING_VALIDATION, $q, $sort);
+        $form = $this->createFormBuilder()->getForm();
 
         return $this->render('story/moderation_list.html.twig', [
+            'form' => $form,
             'stories' => $stories,
             'searchTerm' => $q,
             'sortBy' => $sort,
@@ -184,11 +188,16 @@ final class StoryController extends AbstractController
         ]);
     }
 
-    #[Route('/validate-publish/{id}', name: 'app_story_validate_publish', methods: ['POST'])]
+    #[Route('/validate-publish/{id}/{decision}', name: 'app_story_validate_publish', methods: ['POST'])]
     #[IsGranted('ROLE_MODERATOR')]
     #[IsGranted(StoryVoter::MODERATE, subject: 'story')]
-    public function validatePublish(Story $story, Request $request, EntityManagerInterface $entityManager, Security $security): Response
-    {
+    public function validatePublish(
+        Story   $story,
+        string  $decision,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Security $security,
+    ): Response {
         $moderationMessage = new ModerationMessage();
         $form = $this->createForm(ModerationMessageType::class, $moderationMessage);
         $form->handleRequest($request);
@@ -200,34 +209,19 @@ final class StoryController extends AbstractController
             $entityManager->persist($moderationMessage);
         }
 
-        $story->setStoryStatus(StoryStatus::PUBLISHED->value);
+        $status = match ($decision) {
+            'validated' => StoryStatus::PUBLISHED,
+            'rejected' => StoryStatus::DRAFT,
+            default => StoryStatus::WAITING_VALIDATION,
+        };
+        $story->setStoryStatus($status);
         $entityManager->flush();
 
-        $this->addFlash('success', sprintf('Story \'%s\' has been successfully published.', $story->getTitle()));
-
-        return $this->redirectToRoute('app_story_moderation_index');
-    }
-
-    #[Route('/reject-publish/{id}', name: 'app_story_reject_publish', methods: ['POST'])]
-    #[IsGranted('ROLE_MODERATOR')]
-    #[IsGranted(StoryVoter::MODERATE, subject: 'story')]
-    public function rejectPublish(Story $story, Request $request, EntityManagerInterface $entityManager, Security $security): Response
-    {
-        $moderationMessage = new ModerationMessage();
-        $form = $this->createForm(ModerationMessageType::class, $moderationMessage);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $moderationMessage->setStory($story);
-            $moderationMessage->setSender($security->getUser());
-            $moderationMessage->setReceiver($story->getOwner()->getAccount());
-            $entityManager->persist($moderationMessage);
+        if ('validated' === $decision) {
+            $this->addFlash('success', sprintf('Story \'%s\' has been successfully published.', $story->getTitle()));
+        } elseif ('rejected' === $decision) {
+            $this->addFlash('warning', sprintf('Story \'%s\' has been rejected and set back to draft.', $story->getTitle()));
         }
-
-        $story->setStoryStatus(StoryStatus::DRAFT->value);
-        $entityManager->flush();
-
-        $this->addFlash('warning', sprintf('Story \'%s\' has been rejected and set back to draft.', $story->getTitle()));
 
         return $this->redirectToRoute('app_story_moderation_index');
     }

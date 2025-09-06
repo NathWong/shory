@@ -22,19 +22,11 @@
                 <div class="d-flex align-items-center">
                     {% if app.user and app.user.userProfile == story.owner %}
                         <a href="{{ path('app_story_edit', {'id': story.id}) }}"
-                           class="btn btn-secondary me-2"
+                           class="btn btn-secondary"
                            data-turbo-frame="target-center"
                         >
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
-
-                        {% if story.storyStatus != 'published' and story.storyStatus != 'waiting validation' %}
-                            {{ form_start(form, {'action': path('app_story_request_publish', {'id': story.id}), 'method': 'POST', 'attr': {'data-turbo': 'true'}}) }}
-                                <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-send"></i> Request Publication
-                                </button>
-                            {{ form_end(form) }}
-                        {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -44,12 +36,26 @@
                 Create at : {{ story.createdAt|date('d M Y') }}
             </p>
             {{ storyHelper.genre_tag(story) }}
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mb-2">
                 <span class="me-2">Template :</span>
                 <span class="badge rounded-pill fs-6 fw-normal story-render-container {{ template.getCssClass }}">
                             {{ template.getName }}
                             <small class="fst-italic opacity-75">{{ template.getDescription }}</small>
                         </span>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="me-2">Status :</span>
+                <span class="badge rounded-pill fs-6 fw-normal {{ story.storyStatus.getColorClass() }}">
+                    {{ story.storyStatus.value|capitalize }}
+                </span>
+
+                {% if app.user and app.user.userProfile == story.owner and story.storyStatus.value == 'draft' %}
+                    {{ form_start(form, {'action': path('app_story_request_publish', {'id': story.id}), 'method': 'POST', 'attr': {'data-turbo': 'true', 'data-turbo-confirm': 'Are you sure you want to submit this story for validation? It will be locked until a moderator reviews it.'}}) }}
+                        <button type="submit" class="btn btn-success btn-sm ms-3">
+                            <i class="bi bi-send"></i> Request Publication
+                        </button>
+                    {{ form_end(form) }}
+                {% endif %}
             </div>
         </div>
 
@@ -96,7 +102,12 @@
                    data-turbo-action="advance"
                 >
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ chapter.title }}</h5>
+                        <h5 class="mb-1">
+                            {{ chapter.title }}
+                            {% if story.beginning and story.beginning.id == chapter.id %}
+                                <span class="badge badge-beginning ms-3">Beginning</span>
+                            {% endif %}
+                        </h5>
                         <small class="text-muted">Last update {{ chapter.updatedAt|date('d M Y') }}</small>
                     </div>
                 </a>

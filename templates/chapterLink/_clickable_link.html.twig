@@ -4,9 +4,10 @@
         {% set border_class = not loop.last ? 'border-bottom' : '' %}
         <div class="py-3 my-2 {{ border_class }}">
             {% if chapter_link.target %}
-                <a href="{{ path('app_chapter_show', {'id': chapter_link.target.id}) }}"
+                {% set target_route = (route == 'read') ? 'app_chapter_read' : 'app_chapter_show' %}
+                <a href="{{ path(target_route, {'id': chapter_link.target.id}) }}"
                    class="btn btn-secondary"
-                   data-turbo-frame= "target-center"
+                   data-turbo-frame="target-center"
                 >{{ chapter_link.responses.response }}</a>
             {% else %}
                 <span class="btn btn-outline-danger disabled"

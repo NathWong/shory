@@ -14,11 +14,8 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
-use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use function PHPUnit\Framework\isArray;
 use function Symfony\Component\String\u;
 
 #[Route('/chapter')]
@@ -97,12 +94,9 @@ final class ChapterController extends AbstractController
         ]);
     }
 
-    #[Route('/parse/{id}', name: 'app_chapter_parse_input', methods: ['POST'])]
+    #[Route('/parse/{id}/{route}', name: 'app_chapter_parse_input', methods: ['POST'])]
     #[IsGranted(ChapterVoter::VIEW, subject: 'chapter')]
-    public function parseInput(
-        Chapter $chapter,
-        Request $request,
-    ): Response
+    public function parseInput(Chapter $chapter, string $route, Request $request): Response
     {
         $userInput = u($request->get('user_input', ''))
             ->lower()
@@ -120,7 +114,28 @@ final class ChapterController extends AbstractController
         }
 
         $this->addFlash('warning', sprintf('The command \'%s\' did not lead anywhere.', $userInput));
+        $target = match ($route) {
+            'show' => 'app_chapter_show',
+            default => 'app_chapter_read',
+        };
 
-        return $this->redirectToRoute('app_chapter_show', ['id' => $chapter->getId()]);
+        return $this->redirectToRoute($target, ['id' => $chapter->getId()]);
+    }
+
+    #[Route('/read/{id}', name: 'app_chapter_read', methods: ['GET'])]
+    #[IsGranted(StoryVoter::READ, subject: 'chapter')]
+    public function read(
+        Chapter $chapter,
+        ChapterLinkTypeManager $manager,
+        StoryTemplateManager $templateManager,
+    ): Response {
+        $template = $templateManager->getTemplateClass($chapter->getStory()) ?? 'default';
+
+        return $this->render('chapter/read.html.twig', [
+            'chapter' => $chapter,
+            'story' => $chapter->getStory(),
+            'link_twig' => $manager->getLinkShowTwig($chapter),
+            'template_class' => $template,
+        ]);
     }
 }

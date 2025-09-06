@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Contract\CreatedUpdatedInterface;
 use App\Enum\StoryGenreEnum;
+use App\Enum\StoryStatus;
 use App\Repository\StoryRepository;
 use App\Trait\CreatedUpdatedTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -44,8 +45,8 @@ class Story implements CreatedUpdatedInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $storyStatus = null;
+    #[ORM\Column(type: 'string', nullable: true, enumType: StoryStatus::class)]
+    private ?StoryStatus $storyStatus = null;
 
     /**
      * @var Collection<int, Chapter>
@@ -58,6 +59,9 @@ class Story implements CreatedUpdatedInterface
 
     #[ORM\Column(length: 50, nullable: true, options: ['default' => 'default'])]
     private ?string $template = 'default';
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Chapter $beginning = null;
 
     public function __construct()
     {
@@ -154,12 +158,12 @@ class Story implements CreatedUpdatedInterface
         return $this;
     }
 
-    public function getStoryStatus(): ?string
+    public function getStoryStatus(): ?StoryStatus
     {
         return $this->storyStatus;
     }
 
-    public function setStoryStatus(string $storyStatus): static
+    public function setStoryStatus(StoryStatus $storyStatus): static
     {
         $this->storyStatus = $storyStatus;
 
@@ -216,6 +220,18 @@ class Story implements CreatedUpdatedInterface
     public function setTemplate(?string $template): static
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function getBeginning(): ?Chapter
+    {
+        return $this->beginning;
+    }
+
+    public function setBeginning(?Chapter $beginning): static
+    {
+        $this->beginning = $beginning;
 
         return $this;
     }

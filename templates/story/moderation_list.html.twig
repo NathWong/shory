@@ -68,12 +68,12 @@
                                     >
                                         Read
                                     </a>
-                                    {{ form_start(form, {'action': path('app_story_validate_publish', {'id': story.id}), 'method': 'POST', 'attr': {'data-turbo': 'true'}}) }}
+                                    {{ form_start(form, {'action': path('app_story_validate_publish', {'id': story.id, 'decision': 'validated'}), 'method': 'POST', 'attr': {'data-turbo': 'true'}}) }}
                                         <button type="submit" class="btn btn-success">
                                             <i class="bi bi-check-circle"></i> Validate
                                         </button>
                                     {{ form_end(form) }}
-                                    {{ form_start(form, {'action': path('app_story_reject_publish', {'id': story.id}), 'method': 'POST', 'attr': {'data-turbo': 'true'}}) }}
+                                    {{ form_start(form, {'action': path('app_story_validate_publish', {'id': story.id, 'decision': 'rejected'}), 'method': 'POST', 'attr': {'data-turbo': 'true'}}) }}
                                         <button type="submit" class="btn btn-danger ms-2">
                                             <i class="bi bi-x-circle"></i> Reject
                                         </button>

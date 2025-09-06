@@ -194,4 +194,12 @@ class Chapter implements CreatedUpdatedInterface
 
         return $this;
     }
+
+    #[ORM\PrePersist]
+    public function setAsBeginningIfFirst(): void
+    {
+        if ($this->getStory() && !$this->getStory()->getBeginning()) {
+            $this->getStory()->setBeginning($this);
+        }
+    }
 }

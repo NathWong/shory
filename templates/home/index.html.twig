@@ -36,6 +36,14 @@
                     'Start a new story'
                 ) }}
 
+                {{ helper.widget_card(
+                    '<i class="bi bi-binoculars me-2"></i>Browse Stories',
+                    'Read stories published by other users.',
+                    path('app_story_browse'),
+                    'Browse stories',
+                    'advance'
+                ) }}
+
                 {% if is_granted('ROLE_MODERATOR') %}
                     {{ helper.widget_card(
                         '<i class="bi bi-hourglass-split me-2"></i>Stories to Validate',

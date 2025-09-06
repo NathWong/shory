@@ -15,4 +15,13 @@ enum StoryStatus: string implements TranslatableInterface
     {
         return $translator->trans($this->value, locale: $locale);
     }
+
+    public function getColorClass(): string
+    {
+        return match($this) {
+            self::DRAFT => 'text-bg-secondary',
+            self::WAITING_VALIDATION => 'text-bg-warning',
+            self::PUBLISHED => 'text-bg-success',
+        };
+    }
 }

@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block target_center_turbo %}
+    <div class="my-4 story-render-container col-lg-9 col-xl-8 mx-auto {{ template_class }}">
+
+        {# --- Chapter Title --- #}
+        <div class="pb-3 mb-4 border-bottom">
+            <h1 class="display-5 fw-bold">{{ chapter.title }}</h1>
+        </div>
+
+        {# --- Chapter Content --- #}
+        <div class="chapter-content fs-5">
+            {{ chapter.content | markdown_to_html | sanitize_html('app.chapter_content') | raw }}
+        </div>
+
+        {# --- Chapter Links (for navigation) --- #}
+        <div class="card mt-5">
+            <div class="card-body">
+                {{ include(link_twig, {'chapter_links': chapter.chapterLinks, 'chapter': chapter, 'route': 'read'}) }}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
