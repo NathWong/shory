@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StoryGroupRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class StoryGroup implements CreatedUpdatedInterface
 {
     use CreatedUpdatedTrait;
@@ -28,7 +29,7 @@ class StoryGroup implements CreatedUpdatedInterface
     private ?UserProfile $owner = null;
 
     #[ORM\Column(type: 'string', nullable: true, enumType: StoryGenreEnum::class)]
-    private ?string $genre = null;
+    private ?StoryGenreEnum $genre = null;
 
     #[ORM\Column(length: 50, nullable: true, options: ['default' => 'default'])]
     private ?string $template = 'default';
@@ -86,12 +87,12 @@ class StoryGroup implements CreatedUpdatedInterface
         return $this;
     }
 
-    public function getGenre(): ?string
+    public function getGenre(): ?StoryGenreEnum
     {
         return $this->genre;
     }
 
-    public function setGenre(?string $genre): static
+    public function setGenre(?StoryGenreEnum $genre): static
     {
         $this->genre = $genre;
 
@@ -192,5 +193,10 @@ class StoryGroup implements CreatedUpdatedInterface
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getLastStory(): ?Story
+    {
+        return $this->stories->last();
     }
 }

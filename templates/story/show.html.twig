@@ -2,6 +2,8 @@
 {% import 'helpers/right_menu_helper.html.twig' as menuHelper %}
 {% import 'helpers/story_helper.html.twig' as storyHelper %}
 
+{% set storyGroup = story.storyGroup %}
+
 {% block target_center_turbo %}
     <div class="text-center">
         <a href="{{ path('app_story_index') }}"
@@ -17,10 +19,10 @@
 
         <div class="pb-3 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <h1 class="display-5 fw-bold mb-0">{{ story.Title }}</h1>
+                <h1 class="display-5 fw-bold mb-0">{{ storyGroup.Title }}</h1>
 
                 <div class="d-flex align-items-center">
-                    {% if app.user and app.user.userProfile == story.owner %}
+                    {% if app.user and app.user.userProfile == storyGroup.owner %}
                         <a href="{{ path('app_story_edit', {'id': story.id}) }}"
                            class="btn btn-secondary"
                            data-turbo-frame="target-center"
@@ -32,13 +34,13 @@
             </div>
             <p class="lead text-muted">{{ story.Summary }}</p>
             <p class="small text-muted">
-                By : {{ story.owner.penName ? story.owner.penName : story.owner.firstName }} |
+                By : {{ storyGroup.owner.penName ? storyGroup.owner.penName : storyGroup.owner.firstName }} |
                 Create at : {{ story.createdAt|date('d M Y') }}
             </p>
             {{ storyHelper.genre_tag(story) }}
             <div class="d-flex align-items-center mb-2">
                 <span class="me-2">Template :</span>
-                <span class="badge rounded-pill fs-6 fw-normal story-render-container {{ template.getCssClass }}">
+                <span class="badge rounded-pill fs-6 fw-normal {{ template.getCssClass }}">
                             {{ template.getName }}
                             <small class="fst-italic opacity-75">{{ template.getDescription }}</small>
                         </span>
@@ -49,7 +51,7 @@
                     {{ story.storyStatus.value|capitalize }}
                 </span>
 
-                {% if app.user and app.user.userProfile == story.owner and story.storyStatus.value == 'draft' %}
+                {% if app.user and app.user.userProfile == storyGroup.owner and story.storyStatus.value == 'draft' %}
                     {{ form_start(form, {'action': path('app_story_request_publish', {'id': story.id}), 'method': 'POST', 'attr': {'data-turbo': 'true', 'data-turbo-confirm': 'Are you sure you want to submit this story for validation? It will be locked until a moderator reviews it.'}}) }}
                         <button type="submit" class="btn btn-success btn-sm ms-3">
                             <i class="bi bi-send"></i> Request Publication
@@ -84,7 +86,7 @@
         {# --- Chapters --- #}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="h4">Chapitres</h2>
-            {% if app.user and app.user.userProfile == story.owner %}
+            {% if app.user and app.user.userProfile == storyGroup.owner %}
                 <a href="{{ path('app_chapter_new', {'story_id': story.id}) }}"
                    class="btn btn-outline-primary btn-sm"
                    data-turbo-frame="target-center"
@@ -113,7 +115,7 @@
                 </a>
             {% else %}
                 <div class="list-group-item text-center p-5">
-                    {% if app.user and app.user.userProfile == story.owner %}
+                    {% if app.user and app.user.userProfile == storyGroup.owner %}
                         <h5 class="mb-3">The first page is blank.</h5>
                         <p class="text-muted mb-4">Every great adventure begins with a single chapter. Let's write yours.</p>
                         <a href="{{ path('app_chapter_new', {'story_id': story.id}) }}"

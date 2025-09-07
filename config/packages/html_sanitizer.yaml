@@ -1,6 +1,9 @@
 framework:
     html_sanitizer:
         sanitizers:
+            app.hard:
+                allow_safe_elements: false
+                allow_static_elements: false
             app.chapter_content:
                 allow_safe_elements: true
                 allow_elements:

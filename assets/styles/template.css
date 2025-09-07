@@ -3,20 +3,20 @@
     border-radius: 0.5rem; /* Soften the corners */
 }
 
-.story-render-container.template-default {
+.template-default {
     background-color: #FFFFFF;
     color: #212529;
     font-family: 'Georgia', serif;
 }
 
-.story-render-container.template-dark {
+.template-dark {
     background-color: #212529;
     color: #dee2e6;
     font-family: 'Times New Roman', serif;
 }
 
 /* --- Parchment --- */
-.story-render-container.template-parchment {
+.template-parchment {
     background-color: #f5e8c8; /* Parchment paper color */
     color: #4a2c2a; /* Dark brown ink */
     font-family: 'Garamond', 'Georgia', serif;
@@ -29,7 +29,7 @@
 }
 
 /* --- Cyberpunk --- */
-.story-render-container.template-cyberpunk {
+.template-cyberpunk {
     background-color: #0a041a; /* Very dark blue */
     color: #00ff9c; /* Neon green */
     font-family: 'Courier New', monospace;
@@ -45,7 +45,7 @@
 }
 
 /* --- Noir --- */
-.story-render-container.template-noir {
+.template-noir {
     background-color: #f8f8f2; /* Off-white paper */
     color: #222222;
     font-family: 'Courier New', monospace;
@@ -59,7 +59,7 @@
 }
 
 /* --- Steampunk --- */
-.story-render-container.template-steampunk {
+.template-steampunk {
     background-color: #6B4F35; /* Wood brown */
     color: #e0d6c4; /* Light cream text */
     font-family: 'Georgia', serif;
@@ -75,7 +75,7 @@
 }
 
 /* --- Sylvan --- */
-.story-render-container.template-sylvan {
+.template-sylvan {
     background-color: #2a4d3e; /* Forest green */
     color: #f0f5e9; /* Off-white text */
     font-family: 'Georgia', 'Times New Roman', serif;
@@ -89,7 +89,7 @@
 }
 
 /* --- Crimson --- */
-.story-render-container.template-crimson {
+.template-crimson {
     background-color: #121212; /* Deep black */
     color: #e0e0e0; /* Light gray text */
     font-family: 'Georgia', serif;

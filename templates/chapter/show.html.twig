@@ -19,7 +19,7 @@
                 <h1 class="display-5 fw-bold">{{ chapter.title }}</h1>
 
                 {# Edit only if  #}
-                {% if app.user and app.user.userProfile == chapter.story.owner %}
+                {% if app.user and app.user.userProfile == chapter.story.storyGroup.owner %}
                     <a href="{{ path('app_chapter_edit', {'id': chapter.id}) }}"
                        class="btn btn-secondary"
                        data-turbo-frame="target-center"
@@ -36,7 +36,7 @@
         </div>
 
         <div class="chapter-content fs-5">
-            {{ chapter.content | markdown_to_html | sanitize_html('app.chapter_content') | raw }}
+            {{ chapter.content | sanitize_html('app.hard') | markdown_to_html | sanitize_html('app.chapter_content') | raw }}
         </div>
 
         <div class="card mb-3">

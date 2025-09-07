@@ -47,7 +47,6 @@ final class StoryController extends AbstractController
             $storyGroup->setOwner($this->getUserProfile());
 
             // Set version, status, and associate the story with its group
-            $version->setVersion(1);
             $version->setStoryStatus(StoryStatus::DRAFT);
             $version->setStoryGroup($storyGroup);
 

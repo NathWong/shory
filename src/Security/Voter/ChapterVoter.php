@@ -31,7 +31,7 @@ class ChapterVoter extends Voter
 
         // A user can view or edit a chapter if they own the story it belongs to.
         return match ($attribute) {
-            self::EDIT, self::VIEW => $chapter->getStory()->getOwner()->getAccount() === $user,
+            self::EDIT, self::VIEW => $chapter->getStory()->getStoryGroup()->getOwner()->getAccount() === $user,
             default => false,
         };
     }
