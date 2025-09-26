@@ -1,16 +1,11 @@
 {% extends 'base.html.twig' %}
+{% import "helpers/global_helper.html.twig" as helper %}
 
 {% block target_center_turbo %}
-    <div class="text-center">
-        <a href="{{ path('app_story_show', {'id': story.id}) }}"
-           class="btn btn-outline-secondary"
-           data-turbo-frame="target-center"
-           data-turbo-action="advance"
-        >
-            <i class="bi bi-arrow-left-circle me-2"></i>
-            Back to story
-        </a>
-    </div>
+    {{ helper.back_button(
+        'Back to story',
+        path('app_story_show', {'id': story.id})
+    ) }}
     <div class="my-4 story-render-container col-lg-9 col-xl-8 mx-auto {{ template_class }}">
 
         {# --- Chapter Title --- #}

@@ -25,3 +25,16 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro back_button(title, link_path) %}
+    <div class="text-center">
+        <a href="{{ link_path }}"
+           class="btn btn-outline-secondary"
+           data-turbo-frame="target-center"
+           data-turbo-action="advance"
+        >
+            <i class="bi bi-arrow-left-circle me-2"></i>
+            {{ title }}
+        </a>
+    </div>
+{% endmacro %}

@@ -1,20 +1,15 @@
 {% extends 'base.html.twig' %}
 {% import 'helpers/right_menu_helper.html.twig' as menuHelper %}
 {% import 'helpers/story_helper.html.twig' as storyHelper %}
+{% import "helpers/global_helper.html.twig" as helper %}
 
 {% set storyGroup = story.storyGroup %}
 
 {% block target_center_turbo %}
-    <div class="text-center">
-        <a href="{{ path('app_story_index') }}"
-           class="btn btn-outline-secondary"
-           data-turbo-frame="target-center"
-           data-turbo-action="advance"
-        >
-            <i class="bi bi-arrow-left-circle me-2"></i>
-            Back to stories list
-        </a>
-    </div>
+    {{ helper.back_button(
+        'Back to stories list',
+        path('app_story_index')
+    ) }}
     <div class="my-5 col-lg-9 col-xl-8 mx-auto">
 
         <div class="pb-3 mb-4">
