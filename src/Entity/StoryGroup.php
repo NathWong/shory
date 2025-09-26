@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Contract\CreatedUpdatedInterface;
 use App\Enum\StoryGenreEnum;
+use App\Enum\StoryStatus;
 use App\Repository\StoryGroupRepository;
 use App\Trait\CreatedUpdatedTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -198,5 +199,16 @@ class StoryGroup implements CreatedUpdatedInterface
     public function getLastStory(): ?Story
     {
         return $this->stories->last();
+    }
+
+    public function isPublished(): bool
+    {
+        foreach ($this->getStories() as $story) {
+            if ($story->getStoryStatus() === StoryStatus::PUBLISHED) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

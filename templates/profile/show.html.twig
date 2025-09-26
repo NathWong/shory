@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 
+{% import 'helpers/global_helper.html.twig' as helper %}
+
 {% block target_center_turbo %}
+    {{ helper.back_button(
+        'Home',
+        path('app_home')
+    ) }}
     <div class="container my-5">
 
         <div class="p-4 p-md-5 rounded-3 bg-body-tertiary">

@@ -79,3 +79,17 @@
     font-style: italic;
     font-size: 0.8em;
 }
+
+.published_stamp {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    transform: rotate(15deg);
+    text-align: center;
+    z-index: 10;
+}

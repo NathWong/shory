@@ -205,4 +205,16 @@ class Story implements CreatedUpdatedInterface
 
         return $this;
     }
+
+    // Direct access to StoryGroup properties
+    public function getTitle(): ?string
+    {
+        return $this->storyGroup?->getTitle();
+
+    }
+
+    public function getOwner(): ?UserProfile
+    {
+        return $this->storyGroup?->getOwner();
+    }
 }

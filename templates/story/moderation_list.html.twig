@@ -54,7 +54,7 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100 shadow-sm story-render-container {{ templateManager.getTemplateClass(story) }}">
                             <div class="card-body d-flex flex-column" >
-                                <h5 class="card-title">{{ story.title }}</h5>
+                                <h5 class="card-title">{{ story.getTitle }}</h5>
                                 {{ storyHelper.genre_tag(story) }}
                                 <p class="card-text text-muted small">
                                     Created at {{ story.createdAt|date('d/m/Y') }}<br>

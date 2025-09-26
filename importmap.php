@@ -23,7 +23,7 @@ return [
         'version' => '3.2.2',
     ],
     '@hotwired/turbo' => [
-        'version' => '8.0.13',
+        'version' => '8.0.18',
     ],
     'bootstrap' => [
         'version' => '5.3.8',
@@ -40,13 +40,13 @@ return [
         'type' => 'css',
     ],
     'marked' => [
-        'version' => '16.2.1',
+        'version' => '16.3.0',
     ],
     'bootstrap-icons/font/bootstrap-icons.css' => [
         'version' => '1.13.1',
         'type' => 'css',
     ],
     'dompurify' => [
-        'version' => '3.2.6',
+        'version' => '3.2.7',
     ],
 ];
