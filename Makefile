@@ -161,3 +161,7 @@ ts-watch:
 stan:
 	@echo "launch php-stan"
 	vendor/bin/phpstan analyse > last_php_stan.rapport
+
+cs-fixer:
+	@echo "launch php-cs-fixer"
+	vendor/bin/php-cs-fixer fix
