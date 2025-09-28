@@ -24,9 +24,9 @@ class StoryGroupRepository extends ServiceEntityRepository
             ->setParameter('owner', $owner->getId());
         if ($q) {
             $qb->andWhere('sg.title LIKE :searchTerm')
-                ->setParameter('searchTerm', '%' . $q . '%');
+                ->setParameter('searchTerm', '%'.$q.'%');
         }
-        $qb->orderBy('sg.' . $sort, 'DESC');
+        $qb->orderBy('sg.'.$sort, 'DESC');
 
         return $qb->getQuery()->getResult();
     }

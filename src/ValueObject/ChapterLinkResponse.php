@@ -7,16 +7,14 @@ use function Symfony\Component\String\u;
 class ChapterLinkResponse implements \JsonSerializable
 {
     /**
-     * @param string $response
      * @param array|string[] $aliases
-     * @param array[] $translations
+     * @param array[]        $translations
      */
     public function __construct(
         private string $response,
         private array $aliases = [],
         private array $translations = [],
     ) {
-
     }
 
     public function jsonSerialize(): mixed

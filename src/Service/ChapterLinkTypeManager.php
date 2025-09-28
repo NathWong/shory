@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Contract\ChapterLinkTypeInterface;
 use App\Entity\Chapter;
-use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 readonly class ChapterLinkTypeManager
@@ -30,7 +29,7 @@ readonly class ChapterLinkTypeManager
 
     public function getLinkShowTwig(Chapter $chapter): ?string
     {
-        if (!$identifier = $chapter->getLinkType()){
+        if (!$identifier = $chapter->getLinkType()) {
             return null;
         }
 
@@ -40,12 +39,12 @@ readonly class ChapterLinkTypeManager
             }
         }
 
-        throw new RuntimeException(sprintf('Unknown chapter link type "%s".', $identifier));
+        throw new \RuntimeException(sprintf('Unknown chapter link type "%s".', $identifier));
     }
 
     public function getLinkEditTwig(Chapter $chapter): ?string
     {
-        if (!$identifier = $chapter->getLinkType()){
+        if (!$identifier = $chapter->getLinkType()) {
             return null;
         }
 
@@ -55,6 +54,6 @@ readonly class ChapterLinkTypeManager
             }
         }
 
-        throw new RuntimeException(sprintf('Unknown chapter link type "%s".', $identifier));
+        throw new \RuntimeException(sprintf('Unknown chapter link type "%s".', $identifier));
     }
 }

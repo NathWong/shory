@@ -71,8 +71,8 @@ final class StoryController extends AbstractController
     public function index(
         StoryGroupRepository $storyGroupRepository,
         StoryTemplateManager $storyTemplateManager,
-        #[MapQueryParameter]?string $q = null,
-        #[MapQueryParameter]string $sort = 'title',
+        #[MapQueryParameter] ?string $q = null,
+        #[MapQueryParameter] string $sort = 'title',
     ): Response {
         $storyGroups = $storyGroupRepository->findByOwner($this->getUserProfile(), $q, $sort);
 
@@ -81,7 +81,7 @@ final class StoryController extends AbstractController
             'searchTerm' => $q,
             'sortBy' => $sort,
             'templateManager' => $storyTemplateManager,
-            ]);
+        ]);
     }
 
     #[Route('/show/{id}', name: 'app_story_show', methods: ['GET'])]
@@ -90,7 +90,7 @@ final class StoryController extends AbstractController
         Story $story,
         StoryTemplateManager $templateManager,
         ModerationMessageRepository $moderationMessageRepository,
-        Security $security
+        Security $security,
     ): Response {
         $chapters = $story->getChapters();
         $form = $this->createFormBuilder()->getForm();
@@ -115,7 +115,7 @@ final class StoryController extends AbstractController
     public function edit(
         Story $story,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $data = [
             'storyGroup' => $story->getStoryGroup(),
@@ -143,8 +143,8 @@ final class StoryController extends AbstractController
         StoryRepository $storyRepository,
         StoryTemplateManager $storyTemplateManager,
         ReadingStatWidget $statWidget,
-        #[MapQueryParameter]?string $q = null,
-        #[MapQueryParameter]string $sort = 'updatedAt',
+        #[MapQueryParameter] ?string $q = null,
+        #[MapQueryParameter] string $sort = 'updatedAt',
     ): Response {
         $stories = $storyRepository->findByStoryStatus(StoryStatus::PUBLISHED, $q, $sort);
 
@@ -201,8 +201,8 @@ final class StoryController extends AbstractController
     public function moderationIndex(
         StoryRepository $storyRepository,
         StoryTemplateManager $storyTemplateManager,
-        #[MapQueryParameter]?string $q = null,
-        #[MapQueryParameter]string $sort = 'updatedAt',
+        #[MapQueryParameter] ?string $q = null,
+        #[MapQueryParameter] string $sort = 'updatedAt',
     ): Response {
         $stories = $storyRepository->findByStoryStatus(StoryStatus::WAITING_VALIDATION, $q, $sort);
         $form = $this->createFormBuilder()->getForm();
@@ -220,8 +220,8 @@ final class StoryController extends AbstractController
     #[IsGranted('ROLE_MODERATOR')]
     #[IsGranted(StoryVoter::MODERATE, subject: 'story')]
     public function validatePublish(
-        Story   $story,
-        string  $decision,
+        Story $story,
+        string $decision,
         Request $request,
         EntityManagerInterface $entityManager,
         Security $security,

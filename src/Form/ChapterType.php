@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Chapter;
 use App\Service\ChapterLinkTypeManager;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -17,7 +16,6 @@ class ChapterType extends AbstractType
     public function __construct(
         private readonly ChapterLinkTypeManager $chapterLinkTypeManager,
     ) {
-
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -28,7 +26,7 @@ class ChapterType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Chapter Title',
                     'class' => 'form-control',
-                    ],
+                ],
             ])
             ->add('content', TextareaType::class, [
                 'label' => false,
@@ -43,16 +41,16 @@ class ChapterType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Link Type',
                     'class' => 'form-select',
-                    ],
+                ],
             ])
             ->add('chapterLinks', CollectionType::class, [
-            'entry_type' => ChapterLinkType::class,
-            'entry_options' => ['label' => false],
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'label' => 'Liens du chapitre',
-        ]);
+                'entry_type' => ChapterLinkType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'Liens du chapitre',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Chapter;
 use App\Entity\Story;
-use App\Entity\UserProfile;
 use App\Enum\StoryGenreEnum;
 use App\Service\StoryTemplateManager;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -21,7 +20,6 @@ class NewStoryType extends AbstractType
     public function __construct(
         private readonly StoryTemplateManager $templateManager,
     ) {
-
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -37,15 +35,15 @@ class NewStoryType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Summary',
-                    'style' => 'height: 150px'
+                    'style' => 'height: 150px',
                 ],
             ])
             ->add('genre', EnumType::class, [
                 'class' => StoryGenreEnum::class,
-                'choice_label' => fn(StoryGenreEnum $genre) => $genre->value,
+                'choice_label' => fn (StoryGenreEnum $genre) => $genre->value,
                 'attr' => [
                     'class' => 'form-select',
-                ]
+                ],
             ])
             ->add('template', ChoiceType::class, [
                 'label' => 'Visual Template',

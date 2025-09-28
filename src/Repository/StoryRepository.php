@@ -30,10 +30,10 @@ class StoryRepository extends ServiceEntityRepository
 
         if ($searchTerm) {
             $qb->andWhere('s.title LIKE :searchTerm')
-                ->setParameter('searchTerm', '%' . $searchTerm . '%');
+                ->setParameter('searchTerm', '%'.$searchTerm.'%');
         }
 
-        $qb->orderBy('s.' . $orderBy, $orderDir);
+        $qb->orderBy('s.'.$orderBy, $orderDir);
 
         return $qb->getQuery()->getResult();
     }
@@ -45,9 +45,9 @@ class StoryRepository extends ServiceEntityRepository
             ->setParameter('status', $WAITING_VALIDATION->value);
         if ($q) {
             $qb->andWhere('s.title LIKE :searchTerm')
-                ->setParameter('searchTerm', '%' . $q . '%');
+                ->setParameter('searchTerm', '%'.$q.'%');
         }
-        $qb->orderBy('s.' . $sort, 'DESC');
+        $qb->orderBy('s.'.$sort, 'DESC');
 
         return $qb->getQuery()->getResult();
     }

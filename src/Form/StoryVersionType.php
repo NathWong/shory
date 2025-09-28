@@ -19,7 +19,7 @@ class StoryVersionType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Summary',
-                    'style' => 'height: 150px'
+                    'style' => 'height: 150px',
                 ],
             ])
         ;

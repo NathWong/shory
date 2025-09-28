@@ -10,8 +10,6 @@ use App\Service\AvatarHandler;
 use App\Trait\ProfiledUserTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -47,8 +45,7 @@ final class ProfileController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         AvatarHandler $avatarHandler,
-    ): Response
-    {
+    ): Response {
         if ($this->getUserProfile()) {
             return $this->redirectToRoute('app_profile_edit');
         }

@@ -7,10 +7,6 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class ResponseToStringTransformer implements DataTransformerInterface
 {
-
-    /**
-     * @inheritDoc
-     */
     public function transform(mixed $value): string
     {
         if (null === $value) {
@@ -24,9 +20,6 @@ class ResponseToStringTransformer implements DataTransformerInterface
         return $value->getResponse();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function reverseTransform(mixed $value): mixed
     {
         return new ChapterLinkResponse($value ?? '');

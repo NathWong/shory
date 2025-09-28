@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: StoryRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -210,7 +209,6 @@ class Story implements CreatedUpdatedInterface
     public function getTitle(): ?string
     {
         return $this->storyGroup?->getTitle();
-
     }
 
     public function getOwner(): ?UserProfile

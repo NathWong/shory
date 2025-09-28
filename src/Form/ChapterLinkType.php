@@ -17,7 +17,6 @@ class ChapterLinkType extends AbstractType
     public function __construct(
         private readonly ResponseToStringTransformer $responseTransformer,
     ) {
-
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -32,7 +31,7 @@ class ChapterLinkType extends AbstractType
                 'choice_label' => 'title',
                 'label' => 'Targeted Chapter',
                 'required' => false,
-                'attr' => ['class' => 'form-select']
+                'attr' => ['class' => 'form-select'],
             ])
             ->add('id', HiddenType::class, ['mapped' => false])
         ;

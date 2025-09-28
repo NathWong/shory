@@ -18,7 +18,7 @@ enum StoryStatus: string implements TranslatableInterface
 
     public function getColorClass(): string
     {
-        return match($this) {
+        return match ($this) {
             self::DRAFT => 'text-bg-secondary',
             self::WAITING_VALIDATION => 'text-bg-warning',
             self::PUBLISHED => 'text-bg-success',

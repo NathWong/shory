@@ -19,7 +19,7 @@ enum StoryGenreEnum: string
 
     public function getColorClass(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Horror, self::Thriller => 'text-bg-danger',
             self::Fantasy, self::Adventure => 'text-bg-success',
             self::ScienceFiction, self::Mystery => 'text-bg-primary',

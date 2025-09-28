@@ -8,7 +8,7 @@ use App\Entity\Story;
 
 class StoryEditorManager
 {
-    Public function canEditStory(ProfiledUserInterface $user, Story $story): bool
+    public function canEditStory(ProfiledUserInterface $user, Story $story): bool
     {
         return $this->isOwner($user, $story);
     }

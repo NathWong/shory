@@ -27,13 +27,13 @@ class StoryCrudController extends AbstractCrudController
             EasyAdmin\AssociationField::new('owner'),
             EasyAdmin\ChoiceField::new('genre')
                 ->setChoices(array_combine(
-                    array_map(fn($case) => $case->value, StoryGenreEnum::cases()),
-                    array_map(fn($case) => $case->value, StoryGenreEnum::cases())
+                    array_map(fn ($case) => $case->value, StoryGenreEnum::cases()),
+                    array_map(fn ($case) => $case->value, StoryGenreEnum::cases())
                 )),
             EasyAdmin\ChoiceField::new('storyStatus')
                 ->setChoices(array_combine(
-                    array_map(fn($case) => $case->value, StoryStatus::cases()),
-                    array_map(fn($case) => $case->value, StoryStatus::cases())
+                    array_map(fn ($case) => $case->value, StoryStatus::cases()),
+                    array_map(fn ($case) => $case->value, StoryStatus::cases())
                 )),
             EasyAdmin\TextField::new('template'),
             EasyAdmin\DateTimeField::new('createdAt')->hideOnForm(),

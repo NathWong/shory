@@ -8,11 +8,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final readonly class AvatarHandler
 {
-    private const  PREFIX = 'avtr_';
+    private const PREFIX = 'avtr_';
 
     public function __construct(
         #[Autowire('%kernel.project_dir%/public/uploads/avatar')]
-        private string $avatarDir
+        private string $avatarDir,
     ) {
     }
 

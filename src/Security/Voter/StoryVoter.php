@@ -48,11 +48,11 @@ class StoryVoter extends Voter
         return match ($attribute) {
             self::EDIT => $isOwner,
 
-            self::VIEW => $isOwner || ($isModerator && $story->getStoryStatus() === StoryStatus::WAITING_VALIDATION) || $story->getStoryStatus() === StoryStatus::PUBLISHED,
+            self::VIEW => $isOwner || ($isModerator && StoryStatus::WAITING_VALIDATION === $story->getStoryStatus()) || StoryStatus::PUBLISHED === $story->getStoryStatus(),
 
-            self::READ => $isOwner || $story->getStoryStatus() === StoryStatus::PUBLISHED,
+            self::READ => $isOwner || StoryStatus::PUBLISHED === $story->getStoryStatus(),
 
-            self::MODERATE => $isModerator && $story->getStoryStatus() === StoryStatus::WAITING_VALIDATION,
+            self::MODERATE => $isModerator && StoryStatus::WAITING_VALIDATION === $story->getStoryStatus(),
 
             default => false,
         };

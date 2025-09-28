@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Contract\StoryTemplateInterface;
 use App\Entity\Story;
-use Exception;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 readonly class StoryTemplateManager
@@ -20,11 +19,7 @@ readonly class StoryTemplateManager
         $choices = [];
         foreach ($this->templates as $template) {
             if (!($template instanceof StoryTemplateInterface)) {
-                throw new Exception(sprintf(
-                    '\"%s\" must implement \"%s\"',
-                    $template::class,
-                    StoryTemplateInterface::class,
-                ));
+                throw new \Exception(sprintf('\"%s\" must implement \"%s\"', $template::class, StoryTemplateInterface::class));
             }
 
             $choices[$template->getName()] = $template->getIdentifier();
@@ -44,16 +39,11 @@ readonly class StoryTemplateManager
     {
         foreach ($this->templates as $template) {
             if (!($template instanceof StoryTemplateInterface)) {
-                throw new Exception(sprintf(
-                    '\"%s\" must implement \"%s\"',
-                    $template::class,
-                    StoryTemplateInterface::class,
-                ));
+                throw new \Exception(sprintf('\"%s\" must implement \"%s\"', $template::class, StoryTemplateInterface::class));
             }
             if ($template->getIdentifier() === $identifier) {
                 return $template;
             }
-
         }
 
         return null;

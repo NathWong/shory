@@ -30,10 +30,10 @@ class StoryGroupType extends AbstractType
             ])
             ->add('genre', EnumType::class, [
                 'class' => StoryGenreEnum::class,
-                'choice_label' => fn(StoryGenreEnum $genre) => $genre->value,
+                'choice_label' => fn (StoryGenreEnum $genre) => $genre->value,
                 'attr' => [
                     'class' => 'form-select',
-                ]
+                ],
             ])
             ->add('template', ChoiceType::class, [
                 'label' => 'Visual Template',

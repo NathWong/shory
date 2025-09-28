@@ -11,14 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait CreatedUpdatedTrait
 {
-    #[Orm\PrePersist]
+    #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function autoSetUpdatedAt(): void
     {
         $this->setUpdatedAt(new \DateTimeImmutable());
     }
 
-    #[Orm\PrePersist]
+    #[ORM\PrePersist]
     public function autoSetCreatedAt(): void
     {
         if (!$this->getCreatedAt()) {

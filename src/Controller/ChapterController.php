@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 use function Symfony\Component\String\u;
 
 #[Route('/chapter')]
@@ -30,11 +31,10 @@ final class ChapterController extends AbstractController
     #[IsGranted(StoryVoter::EDIT, subject: 'story')]
     public function create(
         #[MapEntity(mapping: ['story_id' => 'id'])]
-        Story                  $story,
-        Request                $request,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
+        Story $story,
+        Request $request,
+        EntityManagerInterface $entityManager,
+    ): Response {
         $chapter = new Chapter();
         $form = $this->createForm(ChapterType::class, $chapter);
         $form->handleRequest($request);
@@ -76,11 +76,10 @@ final class ChapterController extends AbstractController
     #[Route('/edit/{id}', name: 'app_chapter_edit')]
     #[IsGranted(ChapterVoter::EDIT, subject: 'chapter')]
     public function edit(
-        Chapter                $chapter,
-        Request                $request,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
+        Chapter $chapter,
+        Request $request,
+        EntityManagerInterface $entityManager,
+    ): Response {
         $form = $this->createForm(ChapterType::class, $chapter);
         $form->handleRequest($request);
 
@@ -148,7 +147,7 @@ final class ChapterController extends AbstractController
             ['createdAt' => 'DESC']
         );
         if ($previousRead->getChapterLink()->getSource() === $chapter) {
-            $previousRead = null;// Prevent go back to self
+            $previousRead = null; // Prevent go back to self
         }
 
         return $this->render('chapter/read.html.twig', [

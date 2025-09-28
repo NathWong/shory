@@ -204,7 +204,7 @@ class StoryGroup implements CreatedUpdatedInterface
     public function isPublished(): bool
     {
         foreach ($this->getStories() as $story) {
-            if ($story->getStoryStatus() === StoryStatus::PUBLISHED) {
+            if (StoryStatus::PUBLISHED === $story->getStoryStatus()) {
                 return true;
             }
         }

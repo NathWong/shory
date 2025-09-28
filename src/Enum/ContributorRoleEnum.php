@@ -7,7 +7,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 enum ContributorRoleEnum: string implements TranslatableInterface
 {
-
     // The reviewer can read unpublish story and add notes
     case REVIEWER = 'reviewer';
 

@@ -31,7 +31,7 @@ class ModerationMessageType extends AbstractType
             'data_class' => ModerationMessage::class,
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
-            'csrf_token_id'   => 'moderation_message',
+            'csrf_token_id' => 'moderation_message',
         ]);
     }
 }
