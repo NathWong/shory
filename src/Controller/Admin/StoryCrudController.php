@@ -8,6 +8,9 @@ use App\Enum\StoryStatus;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field as EasyAdmin;
 
+/**
+ * @extends AbstractCrudController<Story>
+ */
 class StoryCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string

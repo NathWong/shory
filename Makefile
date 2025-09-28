@@ -157,3 +157,7 @@ ts-one:
 ts-watch:
 	@echo "Lancement du compilateur ts en mode watch"
 	npx tsc --watch
+
+stan:
+	@echo "launch php-stan"
+	vendor/bin/phpstan analyse > last_php_stan.rapport

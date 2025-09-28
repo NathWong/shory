@@ -3,6 +3,7 @@
 namespace App\Trait;
 
 use App\Contract\ProfiledUserInterface;
+use App\Entity\User;
 use App\Entity\UserProfile;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
@@ -17,6 +18,11 @@ trait ProfiledUserTrait
         }
 
         return $user;
+    }
+
+    private function getUserEntity(): User
+    {
+        return $this->getProfiledUser();
     }
 
     private function getUserProfile(): ?UserProfile

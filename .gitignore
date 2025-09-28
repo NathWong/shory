@@ -29,5 +29,11 @@
 test.php
 Makefile.local
 
+*.rapport
+
 assets/controllers/*.js
 assets/controllers/*.js.map
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

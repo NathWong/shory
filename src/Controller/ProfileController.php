@@ -54,7 +54,7 @@ final class ProfileController extends AbstractController
         }
 
         $userProfile = new UserProfile();
-        $userProfile->setAccount($this->getProfiledUser());
+        $userProfile->setAccount($this->getUserEntity());
         $form = $this->createForm(UserProfileType::class, $userProfile);
         $form->handleRequest($request);
 
