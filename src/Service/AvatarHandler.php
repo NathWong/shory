@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\UserProfile;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -13,6 +14,7 @@ final readonly class AvatarHandler
     public function __construct(
         #[Autowire('%kernel.project_dir%/public/uploads/avatar')]
         private string $avatarDir,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -29,7 +31,7 @@ final readonly class AvatarHandler
         try {
             $avatar->move($this->avatarDir, $avatarName);
         } catch (\Exception $e) {
-            // Silent exception the file is just no saved
+            $this->logger->error($e->getMessage(), $e->getTrace());
 
             return;
         }
