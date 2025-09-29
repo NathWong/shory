@@ -127,7 +127,6 @@ final class StoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }
 
