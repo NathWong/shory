@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Attribute\Transaction;
 use App\Entity\ModerationMessage;
 use App\Entity\Story;
 use App\Entity\StoryGroup;
@@ -110,12 +111,12 @@ final class StoryController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'app_story_edit', methods: ['GET', 'POST'])]
     #[IsGranted(StoryVoter::EDIT, subject: 'story')]
+    #[Route('/edit/{id}', name: 'app_story_edit', methods: ['GET', 'POST'])]
+    #[Transaction]
     public function edit(
         Story $story,
         Request $request,
-        EntityManagerInterface $entityManager,
     ): Response {
         $data = [
             'storyGroup' => $story->getStoryGroup(),
@@ -126,7 +127,6 @@ final class StoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
 
             return $this->redirectToRoute('app_story_show', ['id' => $story->getId()]);
         }

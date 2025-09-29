@@ -3,13 +3,14 @@
 namespace App\Listener;
 
 use App\Attribute\Transaction;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -18,9 +19,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 final readonly class TransactionListener
 {
     public function __construct(
-        private ControllerResolverInterface $controllerResolver,
-        private EntityManager $entityManager,
+        private EntityManagerInterface $entityManager,
         private LoggerInterface $logger,
+        private ControllerResolverInterface $controllerResolver = new ControllerResolver(),
     ) {
     }
 
@@ -28,20 +29,16 @@ final readonly class TransactionListener
     public function beginTransaction(ControllerArgumentsEvent $event): void
     {
         $transaction = $this->getTransactionAttribute($event->getRequest());
-        if ($transaction) {
+        if ($this->methodMatch($event->getRequest(), $transaction)) {
             $this->entityManager->beginTransaction();
         }
     }
 
-    /**
-     * @throws OptimisticLockException
-     * @throws ORMException
-     */
     #[AsEventListener(KernelEvents::RESPONSE)]
     public function closeTransaction(ResponseEvent $event): void
     {
         $transaction = $this->getTransactionAttribute($event->getRequest());
-        if (!$transaction) {
+        if (!$this->methodMatch($event->getRequest(), $transaction)) {
             return;
         }
 
@@ -96,5 +93,14 @@ final readonly class TransactionListener
         }
 
         return \in_array($response->getStatusCode(), (array) $transaction->on, true);
+    }
+
+    private function methodMatch(Request $request, ?Transaction $transaction): bool
+    {
+        if (!$transaction) {
+            return false;
+        }
+
+        return \in_array($request->getMethod(), (array) $transaction->method, true);
     }
 }
